@@ -5,5 +5,8 @@
     "authors": [{
         "name": "itlife",
         "email": "info@itlife-studio.ru"
-    }]
+    }],
+    "autoload": {
+        "psr-4": { "itlife\\session\\": "/" }
+    }
 }
