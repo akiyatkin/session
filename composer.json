@@ -8,5 +8,8 @@
     }],
     "autoload": {
         "psr-4": { "itlife\\session\\": "/" }
+    },
+    "require": {
+        "itlife/infrajs": "*"
     }
 }
