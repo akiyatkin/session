@@ -10,6 +10,6 @@
         "psr-4": { "itlife\\session\\": "/" }
     },
     "require": {
-        "itlife/infrajs": "*"
+        "itlife/infrajs": "dev-master"
     }
 }
