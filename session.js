@@ -307,7 +307,7 @@ infra.session={
 						callbacks[i]();
 					}
 				});
-			},1);
+			},infra.conf.session.interval);
 		}
 	},
 	isSync:function(){

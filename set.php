@@ -1,12 +1,14 @@
 <?php
-	require_once(__DIR__.'/../infra/infra.php');
-	infra_require('*session/session.php');
-	infra_admin(true);
-	$ans=array();
-	$name=$_REQUEST['name'];
-	$val=$_REQUEST['val'];
+use itlife\infra\ext\Ans;
 
-	infra_session_set($name,$val);
+infra_require('*session/session.php');
+infra_test(true);
+$ans=array();
+$name=infra_toutf($_REQUEST['name']);
+$val=infra_toutf($_REQUEST['val']);
 
-	$ans['data']=infra_session_get();
-	return infra_ret($ans);
+infra_session_set($name, $val);
+
+$ans['data']=infra_session_get();
+
+return Ans::ret($ans);

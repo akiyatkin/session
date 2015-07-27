@@ -1,7 +1,8 @@
 {
 	"session":{
-		"pub":["sync"],
+		"pub":["sync","interval"],
 		"sync":false,
+		"interval":5000,
 		"change_session_tables":[]
 	}
 }

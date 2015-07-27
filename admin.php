@@ -2,7 +2,7 @@
 
 //use itlife/infrajs/infra/ext/Ans;
 
-infra_admin(true);
+infra_test(true);
 
 infra_require('*session/session.php');
 
