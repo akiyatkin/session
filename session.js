@@ -307,7 +307,7 @@ infra.session={
 						callbacks[i]();
 					}
 				});
-			},infra.conf.session.interval);
+			},1);
 		}
 	},
 	isSync:function(){
@@ -403,7 +403,7 @@ infra.session={
 			}.bind(this));
 			return true;
 		}.bind(this);
-		setTimeout(next,1);
+		setTimeout(next,infra.conf.session.interval);
 	},
 	source:function(obj,exceptions,level){
 		if(window.JSON){

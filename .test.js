@@ -1,13 +1,57 @@
 infra.wait(infrajs,'onshow',function(){
 	var test=infra.test;
+	var server={
+		set:function(name,value){
+			var path='?*session/set.php?name='+name+'&val='+value;
+			infra.unload(path);
+			var r=infra.loadJSON(path);
+		},
+		get:function(name){
+			var path='?*session/get.php?name='+name;
+			infra.unload(path);
+			var r=infra.loadJSON(path);
+			return r['data'];
+		}
+	}
+	test.tasks.push([
+		'guarantee - может понадобиться одна перезагрузка для теста',
+		function(){
+			test.check();
+		},
+		function(){
+
+			var name='test.guarantee';
+			var clt=infra.session.get(name);
+			var srv=server.get(name);
+			if(clt&&srv){
+				//Сбросим для следующего теста
+				infra.session.set('test.guarantee',null,true);	
+				return test.ok();
+			}
+			if (!clt && !srv) {
+				infra.session.set('test.guarantee','ok');
+				location.href=location.href;
+				return;
+			}
+			console.info('Fix');
+			console.log('?*session/get.php?name=guarantee');
+			console.log('?*session/set.php?name=guarantee&val=ok');
+			console.log('?*session/set.php?name=guarantee');
+			if (clt) {
+				return test.err('На сервере значения нет, а в браузере есть');
+			}
+			if (srv) {
+				return test.err('На сервере есть установленное значение, а в браузере такого значения нет');
+			}
+			
+		}
+	]);
 
 	test.tasks.push([
 		'В одной секунде. Клиент потом сервер',
 		function(){
 			infra.session.set('test','Клиент',true);
-			var path='?*session/set.php?name=test&val=Сервер';
-			infra.unload(path);
-			infra.loadJSON(path);
+			server.set('test','Сервер');
 			infra.session.syncNow();
 			test.check();
 		},
@@ -22,9 +66,7 @@ infra.wait(infrajs,'onshow',function(){
 	test.tasks.push([
 		'В одной секунде. Cервер потом клиент',
 		function(){
-			var path='?*session/set.php?name=test&val=Сервер';
-			infra.unload(path);
-			infra.loadJSON(path);
+			server.set('test','Сервер');
 			infra.session.set('test','Клиент',true);
 			infra.session.syncNow();
 			test.check();
@@ -40,9 +82,7 @@ infra.wait(infrajs,'onshow',function(){
 		'Асинхронно. В одной секунде. Клиент потом сервер',
 		function(){
 			infra.session.set('test','Клиент');
-			var path='?*session/set.php?name=test&val=Сервер';
-			infra.unload(path);
-			infra.loadJSON(path);
+			server.set('test','Сервер');
 			infra.session.syncNow();
 			test.check();
 		},
@@ -57,9 +97,7 @@ infra.wait(infrajs,'onshow',function(){
 	test.tasks.push([
 		'Асинхронно. В одной секунде. Cервер потом клиент',
 		function(){
-			var path='?*session/set.php?name=test&val=Сервер';
-			infra.unload(path);
-			infra.loadJSON(path);
+			server.set('test','Сервер');
 			infra.session.set('test','Клиент');
 			infra.session.syncNow();
 			test.check();
@@ -146,5 +184,6 @@ infra.wait(infrajs,'onshow',function(){
 			test.ok();
 		}
 	]);
+	
 	test.exec();
 });
