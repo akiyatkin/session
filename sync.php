@@ -3,7 +3,7 @@ infra_require('*infra/ext/seq.php');
 infra_require('*session/session.php');
 
 
-$ans=array('result'=>1);
+$ans=array();
 
 try {
 	$db=&infra_db();
@@ -12,7 +12,7 @@ try {
 }
 
 if (!$db) {
-	return infra_echo($ans, 'Нет соединения с базой данных. Сессия только в браузере.', 0);
+	return infra_err($ans, 'Нет соединения с базой данных. Сессия только в браузере.');
 }
 
 
@@ -121,5 +121,5 @@ if ($list) {
 }
 $ans['is']['session_id']=!!$session_id;
 
-return infra_echo($ans);
+return infra_ret($ans);
 /**/
