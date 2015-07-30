@@ -50,13 +50,13 @@ infra.wait(infrajs,'onshow',function(){
 	test.tasks.push([
 		'В одной секунде. Клиент потом сервер',
 		function(){
-			infra.session.set('test','Клиент',true);
-			server.set('test','Сервер');
+			infra.session.set('test','client',true);
+			server.set('test','server');
 			infra.session.syncNow();
 			test.check();
 		},
 		function(){
-			if(infra.session.get('test')!='Сервер')return test.err(infra.session.get('test'));
+			if(infra.session.get('test')!='server')return test.err(infra.session.get('test'));
 			infra.session.set('test',null,true);
 			test.ok();
 		}
@@ -66,13 +66,13 @@ infra.wait(infrajs,'onshow',function(){
 	test.tasks.push([
 		'В одной секунде. Cервер потом клиент',
 		function(){
-			server.set('test','Сервер');
-			infra.session.set('test','Клиент',true);
+			server.set('test','server');
+			infra.session.set('test','client',true);
 			infra.session.syncNow();
 			test.check();
 		},
 		function(){
-			if(infra.session.get('test')!='Клиент')return test.err(infra.session.get('test'));
+			if(infra.session.get('test')!='client')return test.err(infra.session.get('test'));
 			infra.session.set('test',null,true);
 			test.ok();
 		}
@@ -81,13 +81,13 @@ infra.wait(infrajs,'onshow',function(){
 	test.tasks.push([
 		'Асинхронно. В одной секунде. Клиент потом сервер',
 		function(){
-			infra.session.set('test','Клиент');
-			server.set('test','Сервер');
+			infra.session.set('test','client');
+			server.set('test','server');
 			infra.session.syncNow();
 			test.check();
 		},
 		function(){//Синхронная запись Клиент придёт позже... и это норм.
-			if(infra.session.get('test')!='Клиент')return test.err(infra.session.get('test'));
+			if(infra.session.get('test')!='client')return test.err(infra.session.get('test'));
 			infra.session.set('test',null,true);
 			test.ok();
 		}
@@ -97,13 +97,13 @@ infra.wait(infrajs,'onshow',function(){
 	test.tasks.push([
 		'Асинхронно. В одной секунде. Cервер потом клиент',
 		function(){
-			server.set('test','Сервер');
-			infra.session.set('test','Клиент');
+			server.set('test','server');
+			infra.session.set('test','client');
 			infra.session.syncNow();
 			test.check();
 		},
 		function(){
-			if(infra.session.get('test')!='Клиент')return test.err(infra.session.get('test'));
+			if(infra.session.get('test')!='client')return test.err(infra.session.get('test'));
 			infra.session.set('test',null,true);
 			test.ok();
 		}

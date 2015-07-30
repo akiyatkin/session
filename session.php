@@ -252,7 +252,7 @@ function infra_session_setEmail($email)
 	
 	$session_id=infra_session_initId();
 	$sql='UPDATE ses_sessions
-				SET email = ?
+				SET email = ?, date=now()
 				WHERE session_id=?';
 	$stmt=$db->prepare($sql);
 	$stmt->execute(array($email, $session_id));
@@ -271,7 +271,7 @@ function infra_session_setVerify()
 		return;
 	}
 	$sql='UPDATE ses_sessions
-				SET verify = 1, date=now()
+				SET verify = 1
 				WHERE session_id=?';
 	$stmt=$db->prepare($sql);
 	$stmt->execute(array($session_id));
