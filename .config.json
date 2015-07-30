@@ -2,7 +2,7 @@
 	"session":{
 		"pub":["sync","interval"],
 		"sync":false,
-		"interval":10000,
+		"interval":1,
 		"change_session_tables":[]
 	}
 }

@@ -27,16 +27,11 @@ if (!$timelast) {
 $time=time();//время синхронизации и время записываемых данных, устанавливается в cookie
 $ans['time']=$time;
 $list=infra_json_decode($_POST['list']);
-if ($list===false) {
-	$list=null;
-}
 
 infra_fora($list, function (&$li) use ($time) {
 	$li['time']=$time;
 });
 
-$ans['is']=array();
-$ans['is']['news']=false;
 
 if ($session_id) {
 	$session_id = infra_once('sync_php_checksession', function ($session_id, $session_pass) {
@@ -50,29 +45,22 @@ if ($session_id) {
 		}
 		return $session_id;
 	}, array($session_id, $session_pass), isset($_GET['re']));
-	if (!$session_id) {
-		$ans['Авторизация']=false;
-	} else {
-		$ans['Авторизация']=true;
-	}
 }
+$ans['auth']=!!$session_id;
 //Здесь session_id проверенный
-$ans['news']=array();
 if ($session_id && $timelast <= $time) {
 	$sql='select name, value, unix_timestamp(time) as time from ses_records where session_id=? and time>=from_unixtime(?) order by time, rec_id';
 	$stmt=$db->prepare($sql);
 	$stmt->execute(array($session_id,$timelast));
 	$news=$stmt->fetchAll();
-	$ans['list']=$list;
-	$ans['orignews']=$news;
+	if ($list) {
+		$ans['list']=$list;
+	}
+	//$ans['orignews']=$news;
 	if ($news) {
 		$ans['news']=$news;
 		infra_forr($ans['news'], function (&$v) use ($list, &$ans) {
-			
-			
 			$v['value']=infra_json_decode($v['value'], true);
-			
-			
 			$v['name']=infra_seq_right($v['name']);
 			$r=infra_forr($list, function ($item) use (&$v, &$ans) {
 				//Устанавливаемое значение ищим в новости
@@ -93,17 +81,10 @@ if ($session_id && $timelast <= $time) {
 				return new infra_Fix('del');
 			}
 		});
-
-
-		$ans['is']['news']=!!$ans['news'];
-		if (!$ans['news']) {
-			unset($ans['news']);
-		}
 	}
 	
 }
 
-$ans['is']['list']=!!$list;
 
 if ($list) {
 	if (!$session_id) {
@@ -119,7 +100,6 @@ if ($list) {
 	infra_session_writeNews($list, $session_id);
 	//$ans['news']=array_merge($news,$list);
 }
-$ans['is']['session_id']=!!$session_id;
 
 return infra_ret($ans);
 /**/

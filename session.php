@@ -428,7 +428,7 @@ function infra_session_user_set($email, $short = array(), $value = null)
 	$list['name'] = $right;
 	$list['value'] = $value;
 	$list['time'] = time();
-	
+
 	infra_session_writeNews($list, $user['session_id']);
 }
 function infra_session_writeNews($list, $session_id)

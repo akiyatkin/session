@@ -173,7 +173,7 @@ infra.session={
 		var cb=function(ans){
 			if(!ans||!ans.result)return callback('error');
 			//if(ans.msg)alert(ans.msg);
-			if(!ans.is.session_id){
+			if(!ans.auth){
 				this.logout();
 				return callback();
 			}
