@@ -6,6 +6,9 @@
         "name": "itlife",
         "email": "info@itlife-studio.ru"
     }],
+    "require": {
+        "itlife/infrajs": "~1"
+    },
     "autoload": {
         "psr-4": { "itlife\\session\\": "/" }
     }
