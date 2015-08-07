@@ -1,4 +1,5 @@
 <?php
+
 /*
 Copyright 2011 ITLife, Ltd. Togliatti, Samara Oblast, Russian Federation. http://itlife-studio.ru
 	
@@ -39,10 +40,11 @@ global $infra_session_data;
 function infra_session_initId()
 {
 	//Инициализирует сессию если её нет и возвращает id
-	$id=infra_session_getId();
+	$id = infra_session_getId();
 	if (!$id) {
 		infra_session_set();
 	}
+
 	return infra_session_getId();
 }
 function infra_session_getName($name)
@@ -51,46 +53,45 @@ function infra_session_getName($name)
 }
 function infra_session_recivenews($list = array())
 {
-	
 	global $infra_session_time;
 	if (!$infra_session_time) {
-		$infra_session_time=1;
+		$infra_session_time = 1;
 	}
 
-	$data=array( //id и time берутся из кукисов на сервере
-		'time'=>$infra_session_time,
-		'list'=>infra_json_encode($list)
+	$data = array( //id и time берутся из кукисов на сервере
+		'time' => $infra_session_time,
+		'list' => infra_json_encode($list),
 	);
 	global $infra_session_lasttime;
-	$infra_session_lasttime=true;//Метка что вызов из php
-	$oldPOST=$_POST;
-	$oldREQ=$_REQUEST;
-	$_POST=$data;
-	$_REQUEST=$data;
+	$infra_session_lasttime = true;//Метка что вызов из php
+	$oldPOST = $_POST;
+	$oldREQ = $_REQUEST;
+	$_POST = $data;
+	$_REQUEST = $data;
 
-	$src='*session/sync.php';
+	$src = '*session/sync.php';
 
 	infra_unload($src);
-	$ans=infra_loadJSON($src);
-	$infra_session_time=$ans['time'];
+	$ans = infra_loadJSON($src);
+	$infra_session_time = $ans['time'];
 	//echo '<pre>';
 	//print_r($ans);
 	//exit;
-	$_POST=$oldPOST;
-	$_REQUEST=$oldREQ;
+	$_POST = $oldPOST;
+	$_REQUEST = $oldREQ;
+
 	return $ans;
 }
 function infra_session_syncreq($list = array())
 {
 	//новое значение, //Отправляется пост на файл, который записывает и возвращает данные
-	$ans=infra_session_recivenews($list);
+	$ans = infra_session_recivenews($list);
 	if (!$ans) {
 		return;
 	}
 	//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
 	global $infra_session_data;
-	$infra_session_data=infra_session_make($ans['news'], $infra_session_data);
-
+	$infra_session_data = infra_session_make($ans['news'], $infra_session_data);
 }
 function infra_session_getPass()
 {
@@ -101,7 +102,8 @@ function infra_session_getId()
 	infra_once('infra_session_getId_cache', function () {
 		infra_cache_no();
 	});
-	return (int)infra_view_getCookie(infra_session_getName('id'));
+
+	return (int) infra_view_getCookie(infra_session_getName('id'));
 }
 function infra_session_getTime()
 {
@@ -109,18 +111,18 @@ function infra_session_getTime()
 }
 function infra_session_syncNow()
 {
-	$ans=infra_session_recivenews();
+	$ans = infra_session_recivenews();
 	if (!$ans) {
 		return;
 	}
 	//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
 	global $infra_session_data;
-	$infra_session_data=infra_session_make($ans['news'], $infra_session_data);
+	$infra_session_data = infra_session_make($ans['news'], $infra_session_data);
 }
 function infra_session_sync($list = null)
 {
-	$session_id=infra_session_getId();
-	
+	$session_id = infra_session_getId();
+
 	if (!$session_id && !$list) {
 		return;//Если ничего не устанавливается и нет id то sync не делается
 	}
@@ -128,12 +130,12 @@ function infra_session_sync($list = null)
 	infra_session_syncreq($list);
 }
 
-
 function &infra_session_make($list, &$data = array())
 {
 	infra_fora($list, function ($li) use (&$data) {
-		$data=&infra_seq_set($data, $li['name'], $li['value']);
+		$data = &infra_seq_set($data, $li['name'], $li['value']);
 	});
+
 	return $data;
 }
 function infra_session_get($name = '', $def = null)
@@ -141,9 +143,9 @@ function infra_session_get($name = '', $def = null)
 	infra_once('infra_session_getinitsync', function () {
 		infra_session_sync();
 	});
-	$name=infra_seq_right($name);
+	$name = infra_seq_right($name);
 	global $infra_session_data;
-	$val=infra_seq_get($infra_session_data, $name);
+	$val = infra_seq_get($infra_session_data, $name);
 	if (is_null($val)) {
 		return $def;
 	} else {
@@ -153,20 +155,23 @@ function infra_session_get($name = '', $def = null)
 function infra_session_set($name = '', $value = null)
 {
 	//if(infra_session_get($name)===$value)return; //если сохранена ссылка то изменение её не попадает в базу данных и не синхронизируется
-	$right=infra_seq_right($name);
+	$right = infra_seq_right($name);
 
-	if (is_null($value)) {//Удаление свойства
-		$last=array_pop($right);
-		$val=infra_session_get($right);
-		if ($last&&infra_isAssoc($val) === true) {//Имеем дело с ассоциативным массивом
-			$iselse=false;
+	if (is_null($value)) {
+		//Удаление свойства
+		$last = array_pop($right);
+		$val = infra_session_get($right);
+		if ($last && infra_isAssoc($val) === true) {
+			//Имеем дело с ассоциативным массивом
+			$iselse = false;
 			foreach ($val as $i => $valval) {
-				if ($i!=$last) {
-					$iselse=true;
+				if ($i != $last) {
+					$iselse = true;
 					break;
 				}
 			}
-			if (!$iselse) {//В объекте ничего больше нет кроме удаляемого свойства... или и его может даже нет
+			if (!$iselse) {
+				//В объекте ничего больше нет кроме удаляемого свойства... или и его может даже нет
 				//Зачит надо удалить и сам объект
 				return infra_session_set($right, null);
 			} else {
@@ -174,34 +179,30 @@ function infra_session_set($name = '', $value = null)
 			}
 		}
 	}
-	$li=array('name'=>$right,'value'=>$value);
+	$li = array('name' => $right,'value' => $value);
 	global $infra_session_data;
-	
+
 	infra_session_sync($li);
 	$infra_session_data = infra_session_make($li, $infra_session_data);
-
 }
-
-
-
-
 
 function infra_session_getLink($email = false)
 {
-	$host=infra_view_getHost();
-	$path=infra_view_getRoot();
+	$host = infra_view_getHost();
+	$path = infra_view_getRoot();
 	if ($email) {
-		$user=infra_session_getUser($email);
+		$user = infra_session_getUser($email);
 		if (!$user) {
 			return 'http://'.$host.'/'.$path;
 		}
-		$pass=md5($user['password']);
-		$id=$user['session_id'];
+		$pass = md5($user['password']);
+		$id = $user['session_id'];
 	} else {
-		$pass=infra_view_getCookie(infra_session_getName('pass'));
-		$id=infra_view_getCookie(infra_session_getName('id'));
+		$pass = infra_view_getCookie(infra_session_getName('pass'));
+		$id = infra_view_getCookie(infra_session_getName('id'));
 	}
-	$link='http://'.$host.'/'.$path.'?*session/login.php?id='.$id.'&pass='.$pass;
+	$link = 'http://'.$host.'/'.$path.'?*session/login.php?id='.$id.'&pass='.$pass;
+
 	return $link;
 }
 /*
@@ -221,90 +222,95 @@ function infra_session_getText($name,$def){ //load для <texarea>...
 
 function infra_session_setPass($password, $session_id = null)
 {
-	$db=&infra_db();
+	$db = &infra_db();
 	if (!$db) {
 		return;
 	}
-	
+
 	if (is_null($session_id)) {
-		$session_id=infra_session_initId();
+		$session_id = infra_session_initId();
 	}
-	$sql='UPDATE ses_sessions
+	$sql = 'UPDATE ses_sessions
 				SET password = ?
 				WHERE session_id=?';
-	$stmt=$db->prepare($sql);
+	$stmt = $db->prepare($sql);
+
 	return $stmt->execute(array($password, $session_id));
 }
 function infra_session_getEmail($session_id = false)
 {
 	if (!$session_id) {
-		$session_id=infra_session_getId();
+		$session_id = infra_session_getId();
 	}
-	$user=infra_session_getUser($session_id);
+	$user = infra_session_getUser($session_id);
+
 	return $user['email'];
 }
 function infra_session_setEmail($email)
 {
-	$db=&infra_db();
+	$db = &infra_db();
 	if (!$db) {
 		return;
 	}
-	
-	$session_id=infra_session_initId();
-	$sql='UPDATE ses_sessions
+
+	$session_id = infra_session_initId();
+	$sql = 'UPDATE ses_sessions
 				SET email = ?, date=now()
 				WHERE session_id=?';
-	$stmt=$db->prepare($sql);
+	$stmt = $db->prepare($sql);
 	$stmt->execute(array($email, $session_id));
+
 	return true;
 }
 function infra_session_getVerify()
 {
-	$user=infra_session_getUser();
-	return (bool)$user['verify'];
+	$user = infra_session_getUser();
+
+	return (bool) $user['verify'];
 }
 function infra_session_setVerify()
 {
-	$session_id=infra_session_getId();
-	$db=&infra_db();
+	$session_id = infra_session_getId();
+	$db = &infra_db();
 	if (!$db) {
 		return;
 	}
-	$sql='UPDATE ses_sessions
+	$sql = 'UPDATE ses_sessions
 				SET verify = 1
 				WHERE session_id=?';
-	$stmt=$db->prepare($sql);
+	$stmt = $db->prepare($sql);
 	$stmt->execute(array($session_id));
 }
 function infra_session_getUser($email = null)
 {
 	if (!$email) {
-		$email=infra_session_getId();
+		$email = infra_session_getId();
 	}
+
 	return infra_once('infra_session_getUser', function ($email) {
-		$db=&infra_db();
+		$db = &infra_db();
 		if (!$db) {
 			return;
 		}
 		if (infra_isInt($email)) {
-			$sql='select * from ses_sessions where session_id=?';
+			$sql = 'select * from ses_sessions where session_id=?';
 		} else {
-			$sql='select * from ses_sessions where email=?';
+			$sql = 'select * from ses_sessions where email=?';
 		}
-		$stmt=$db->prepare($sql);
+		$stmt = $db->prepare($sql);
 		$stmt->execute(array($email));
-		$userData=$stmt->fetch(PDO::FETCH_ASSOC);
+		$userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
 		return $userData;
 	}, array($email));
 }
 
 function infra_session_clear()
 {
-
 }
 function infra_session_logout()
 {
-	$email=infra_session_getEmail();
+	$email = infra_session_getEmail();
 	if (!$email) {
 		return;
 	}
@@ -315,48 +321,49 @@ function infra_session_logout()
 }
 function infra_session_change($session_id, $pass = null)
 {
-
-	$email=infra_session_getEmail();
-	$session_id_old=infra_session_initId();
-	if (!$email) {//Текущая сессия не авторизированная
-		$email=infra_session_getEmail($session_id);
-		if ($email) {//А вот новая сессия аторизированна, значит нужно объединить сессии и грохнуть старую
-			$newans=infra_session_recivenews();
+	$email = infra_session_getEmail();
+	$session_id_old = infra_session_initId();
+	if (!$email) {
+		//Текущая сессия не авторизированная
+		$email = infra_session_getEmail($session_id);
+		if ($email) {
+			//А вот новая сессия аторизированна, значит нужно объединить сессии и грохнуть старую
+			$newans = infra_session_recivenews();
 			//Нужно это всё записать в базу данных для сессии 1
 			infra_session_writeNews($newans['news'], $session_id);
 
 			//Теперь старую сессию нужно удалить полностью
 			//Надо подчистить 2 таблицы
-			if ($session_id_old) {//хз бывает ли такое что его нет
-				$conf=infra_config();
-				$tables=$conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
-				$db=infra_db();
+			if ($session_id_old) {
+				//хз бывает ли такое что его нет
+				$conf = infra_config();
+				$tables = $conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
+				$db = infra_db();
 
 				infra_forr($tables, function () use ($session_id_old, $session_id, &$db) {
-					$sql='UPDATE images SET session_id = ? WHERE session_id = ?;';
-					$stmt=$db->prepare($sql);
-					$stmt->execute(array($session_id,$session_id_old));
+					$sql = 'UPDATE images SET session_id = ? WHERE session_id = ?;';
+					$stmt = $db->prepare($sql);
+					$stmt->execute(array($session_id, $session_id_old));
 				});
-				
-				$sql='DELETE from ses_records where session_id=?';
-				$stmt=$db->prepare($sql);
+
+				$sql = 'DELETE from ses_records where session_id=?';
+				$stmt = $db->prepare($sql);
 				$stmt->execute(array($session_id_old));
-				$sql='DELETE from ses_sessions where session_id=?';
-				$stmt=$db->prepare($sql);
+				$sql = 'DELETE from ses_sessions where session_id=?';
+				$stmt = $db->prepare($sql);
 				$stmt->execute(array($session_id_old));
 			}
 		}
 	}
-	
 
 	global $infra_session_data;
-	$infra_session_data=array();
-	
+	$infra_session_data = array();
+
 	if (is_null($pass)) {
-		$user=infra_session_getUser($session_id);
-		$pass=md5($user['password']);
+		$user = infra_session_getUser($session_id);
+		$pass = md5($user['password']);
 	}
-	
+
 	infra_view_setCookie(infra_session_getName('pass'), $pass);
 	infra_view_setCookie(infra_session_getName('id'), $session_id);
 	infra_view_setCookie(infra_session_getName('time'), 1);
@@ -366,65 +373,69 @@ function &infra_session_user_init($email)
 {
 	$user = infra_session_getUser($email);
 	$session_id = $user['session_id'];
-	$nowsession_id=infra_session_getId();
+	$nowsession_id = infra_session_getId();
 	if ($session_id == $nowsession_id) {
 		return infra_session_get();
 	}
 
 	return infra_once('infra_session_user_init', function ($session_id) {
-		$sql='select name, value, unix_timestamp(time) as time from ses_records where session_id=? order by time,rec_id';
-		$db=infra_db();
-		$stmt=$db->prepare($sql);
+		$sql = 'select name, value, unix_timestamp(time) as time from ses_records where session_id=? order by time,rec_id';
+		$db = infra_db();
+		$stmt = $db->prepare($sql);
 		$stmt->execute(array($session_id));
-		$news=$stmt->fetchAll();
+		$news = $stmt->fetchAll();
 
 		if (!$news) {
-			$news=array();
+			$news = array();
 		}
 
-		$obj=array();
+		$obj = array();
 		infra_forr($news, function (&$v) use (&$obj) {
-			if ($v['value']=='null') {
-				$value=null;
+			if ($v['value'] == 'null') {
+				$value = null;
 			} else {
-				$value=infra_json_decode($v['value']);
+				$value = infra_json_decode($v['value']);
 			}
-			$right=infra_seq_right($v['name']);
-			$obj=infra_seq_set($obj, $right, $value);
+			$right = infra_seq_right($v['name']);
+			$obj = infra_seq_set($obj, $right, $value);
 		});
+
 		return $obj;
 	}, array($session_id));
 }
 function infra_session_user_get($email, $short = array(), $def = null)
 {
-	$obj=&infra_session_user_init($email);
-	$right=infra_seq_right($short);
-	$value=infra_seq_get($obj, $right);
+	$obj = &infra_session_user_init($email);
+	$right = infra_seq_right($short);
+	$value = infra_seq_get($obj, $right);
 	if (is_null($value)) {
-		$value=$def;
+		$value = $def;
 	}
+
 	return $value;
 }
 
 /**
- * Записывает в сессию session_id или email имя и значение
- * @param string|int $email Может быть $session_id
+ * Записывает в сессию session_id или email имя и значение.
+ *
+ * @param string|int	  $email Может быть $session_id
  * @param string|string[] $short Может быть $right путь до значения в объекте
- * @param mixed $value Значение для записи. Любое значение записывается даже null, которое по факту приводит к удалению значения
+ * @param mixed		   $value Значение для записи. Любое значение записывается даже null, которое по факту приводит к удалению значения
+ *
  * @return void|string Строка-ошибка
  */
 function infra_session_user_set($email, $short = array(), $value = null)
 {
-	$user=infra_session_getUser($email);
+	$user = infra_session_getUser($email);
 	if (!$user) {
 		return 'Email Not Found';
 	}
-	$obj=&infra_session_user_init($email);
-	
-	$right=infra_seq_right($short);
+	$obj = &infra_session_user_init($email);
+
+	$right = infra_seq_right($short);
 	infra_seq_set($obj, $right, $value);
-	
-	$list=array();
+
+	$list = array();
 	$list['name'] = $right;
 	$list['value'] = $value;
 	$list['time'] = time();
@@ -436,18 +447,18 @@ function infra_session_writeNews($list, $session_id)
 	if (!$list) {
 		return;
 	}
-	$db=infra_db();
+	$db = infra_db();
 	global $infra_session_lasttime;
-	$isphp=!!$infra_session_lasttime;
-	$sql='insert into `ses_records`(`session_id`, `name`, `value`, `time`) VALUES(?,?,?,FROM_UNIXTIME(?))';
-	$stmt=$db->prepare($sql);
-	$sql='delete from `ses_records` where `session_id`=? and `name`=? and `time`<=FROM_UNIXTIME(?)';
-	$delstmt=$db->prepare($sql);
+	$isphp = !!$infra_session_lasttime;
+	$sql = 'insert into `ses_records`(`session_id`, `name`, `value`, `time`) VALUES(?,?,?,FROM_UNIXTIME(?))';
+	$stmt = $db->prepare($sql);
+	$sql = 'delete from `ses_records` where `session_id`=? and `name`=? and `time`<=FROM_UNIXTIME(?)';
+	$delstmt = $db->prepare($sql);
 	infra_fora($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
 		if (!$isphp && $rec['name'][0] == 'safe') {
 			return;
 		}
-		$name=infra_seq_short($rec['name']);
+		$name = infra_seq_short($rec['name']);
 		$delstmt->execute(array($session_id, $name, $rec['time']));
 		$stmt->execute(array($session_id, $name, infra_json_encode($rec['value']), $rec['time']));
 	});

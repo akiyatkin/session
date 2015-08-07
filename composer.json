@@ -1,15 +1,15 @@
 {
-    "name": "itlife/session",
-    "description": "plugin for infrajs",
-    "license": "GPL3",
-    "authors": [{
-        "name": "itlife",
-        "email": "info@itlife-studio.ru"
-    }],
-    "require": {
-        "itlife/infrajs": "~1"
-    },
-    "autoload": {
-        "psr-4": { "itlife\\session\\": "/" }
-    }
+	"name": "itlife/session",
+	"description": "plugin for infra",
+	"license": "GPL3",
+	"authors": [{
+		"name": "itlife",
+		"email": "info@itlife-studio.ru"
+	}],
+	"require": {
+		"itlife/infra": "~1"
+	},
+	"autoload": {
+		"psr-4": { "itlife\\session\\": "/" }
+	}
 }
