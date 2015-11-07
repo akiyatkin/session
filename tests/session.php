@@ -3,8 +3,16 @@ require_once(__DIR__.'/../session.php');
 $ans=array();
 $ans['title']='Проверка сессии на сервере';
 
+$conf=infra_config();
+if(!$conf['infra']['mysql']){
+	$ans['class']='bg-warning';
+	return infra_err($ans,'infra.mysql=false Нет разрешения на использование базы данных');
+}
+
 $db=&infra_db();
-if(!$db)return infra_err($ans,'ERROR нет базы данных');
+if(!$db){
+	return infra_err($ans,'Не удалось соединиться с базой данных');
+}
 $val=infra_session_get('test');
 
 
