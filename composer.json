@@ -1,15 +1,8 @@
 {
-	"name": "itlife/session",
-	"description": "plugin for infra",
+	"name": "infrajs/session",
+	"description": "Client and server session",
 	"license": "GPL3",
-	"authors": [{
-		"name": "itlife",
-		"email": "info@itlife-studio.ru"
-	}],
 	"require": {
-		"itlife/infra": "~1"
-	},
-	"autoload": {
-		"psr-4": { "itlife\\session\\": "/" }
+		"infrajs/infra": "~1"
 	}
 }
