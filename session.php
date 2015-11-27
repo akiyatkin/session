@@ -1,5 +1,5 @@
 <?php
-
+use infrajs\once\Once;
 /*
 Copyright 2011 ITLife, Ltd. Togliatti, Samara Oblast, Russian Federation. http://itlife-studio.ru
 	
@@ -99,7 +99,7 @@ function infra_session_getPass()
 }
 function infra_session_getId()
 {
-	infra_once('infra_session_getId_cache', function () {
+	Once::exec('infra_session_getId_cache', function () {
 		infra_cache_no();
 	});
 
@@ -140,7 +140,7 @@ function &infra_session_make($list, &$data = array())
 }
 function infra_session_get($name = '', $def = null)
 {
-	infra_once('infra_session_getinitsync', function () {
+	Once::exec('infra_session_getinitsync', function () {
 		infra_session_sync();
 	});
 	$name = infra_seq_right($name);
@@ -287,7 +287,7 @@ function infra_session_getUser($email = null)
 		$email = infra_session_getId();
 	}
 
-	return infra_once('infra_session_getUser', function ($email) {
+	return Once::exec('infra_session_getUser', function ($email) {
 		$db = &infra_db();
 		if (!$db) {
 			return;
@@ -378,7 +378,7 @@ function &infra_session_user_init($email)
 		return infra_session_get();
 	}
 
-	return infra_once('infra_session_user_init', function ($session_id) {
+	return Once::exec('infra_session_user_init', function ($session_id) {
 		$sql = 'select name, value, unix_timestamp(time) as time from ses_records where session_id=? order by time,rec_id';
 		$db = infra_db();
 		$stmt = $db->prepare($sql);

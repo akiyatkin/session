@@ -1,5 +1,5 @@
 <?php
-
+use infrajs\once\Once;
 infra_require('*infra/ext/seq.php');
 infra_require('*session/session.php');
 
@@ -32,7 +32,7 @@ infra_fora($list, function (&$li) use ($time) {
 });
 
 if ($session_id) {
-	$session_id = infra_once('sync_php_checksession', function ($session_id, $session_pass) {
+	$session_id = Once::exec('sync_php_checksession', function ($session_id, $session_pass) {
 		$db = &infra_db();
 		$sql = 'select password from ses_sessions where session_id=?';
 		$stmt = $db->prepare($sql);
