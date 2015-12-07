@@ -1,7 +1,6 @@
 <?php
 use infrajs\once\Once;
-infra_require('*infra/ext/seq.php');
-infra_require('*session/session.php');
+Path::req('*session/session.php');
 
 $ans = array();
 
@@ -12,7 +11,7 @@ try {
 }
 
 if (!$db) {
-	return infra_err($ans, 'Нет соединения с базой данных. Сессия только в браузере.');
+	return Ans::err($ans, 'Нет соединения с базой данных. Сессия только в браузере.');
 }
 
 $session_id = infra_view_getCookie('infra_session_id');
@@ -25,9 +24,9 @@ if (!$timelast) {
 
 $time = time();//время синхронизации и время записываемых данных, устанавливается в cookie
 $ans['time'] = $time;
-$list = infra_json_decode($_POST['list']);
+$list = Load::json_decode($_POST['list']);
 
-infra_fora($list, function (&$li) use ($time) {
+Each::fora($list, function (&$li) use ($time) {
 	$li['time'] = $time;
 });
 
@@ -58,10 +57,10 @@ if ($session_id && $timelast <= $time) {
 	//$ans['orignews']=$news;
 	if ($news) {
 		$ans['news'] = $news;
-		infra_forr($ans['news'], function (&$v) use ($list, &$ans) {
-			$v['value'] = infra_json_decode($v['value'], true);
-			$v['name'] = infra_seq_right($v['name']);
-			$r = infra_forr($list, function ($item) use (&$v, &$ans) {
+		Each::forr($ans['news'], function (&$v) use ($list, &$ans) {
+			$v['value'] = Load::json_decode($v['value'], true);
+			$v['name'] = Sequence::right($v['name']);
+			$r = Each::forr($list, function ($item) use (&$v, &$ans) {
 				//Устанавливаемое значение ищим в новости
 				if (infra_seq_contain($item['name'], $v['name']) !== false) {
 					return true;//найдено совпадение новости с устанавливаемым значением.. новость удаляем
@@ -70,7 +69,7 @@ if ($session_id && $timelast <= $time) {
 				//Новость ищим в устанавливаемом значение
 				$right = infra_seq_contain($v['name'], $item['name']);
 				if ($right) {
-					$v['value'] = infra_seq_set($v['value'], $right, $item['value']);//Новость осталась но она включает устанавливаемые данные
+					$v['value'] = Sequence::set($v['value'], $right, $item['value']);//Новость осталась но она включает устанавливаемые данные
 				}
 			});
 
@@ -99,5 +98,5 @@ if ($list) {
 	//$ans['news']=array_merge($news,$list);
 }
 
-return infra_ret($ans);
+return Ans::ret($ans);
 /**/

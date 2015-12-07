@@ -2,7 +2,7 @@
 
 infra_test(true);
 
-infra_require('*session/session.php');
+Path::req('*session/session.php');
 
 $data = array();
 

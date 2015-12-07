@@ -33,7 +33,6 @@ view объект - на клиенте создаваемый, как view=infr
 **/
 /**/
 
-infra_require('*infra/ext/seq.php');
 
 global $infra_session_data;
 
@@ -72,7 +71,7 @@ function infra_session_recivenews($list = array())
 	$src = '*session/sync.php';
 
 	infra_unload($src);
-	$ans = infra_loadJSON($src);
+	$ans = Load::loadJSON($src);
 	$infra_session_time = $ans['time'];
 	//echo '<pre>';
 	//print_r($ans);
@@ -100,7 +99,7 @@ function infra_session_getPass()
 function infra_session_getId()
 {
 	Once::exec('infra_session_getId_cache', function () {
-		infra_cache_no();
+		header('Cache-Controll: no-store');
 	});
 
 	return (int) infra_view_getCookie(infra_session_getName('id'));
@@ -132,8 +131,8 @@ function infra_session_sync($list = null)
 
 function &infra_session_make($list, &$data = array())
 {
-	infra_fora($list, function ($li) use (&$data) {
-		$data = &infra_seq_set($data, $li['name'], $li['value']);
+	Each::fora($list, function ($li) use (&$data) {
+		$data = &Sequence::set($data, $li['name'], $li['value']);
 	});
 
 	return $data;
@@ -143,9 +142,9 @@ function infra_session_get($name = '', $def = null)
 	Once::exec('infra_session_getinitsync', function () {
 		infra_session_sync();
 	});
-	$name = infra_seq_right($name);
+	$name = Sequence::right($name);
 	global $infra_session_data;
-	$val = infra_seq_get($infra_session_data, $name);
+	$val = Sequence::get($infra_session_data, $name);
 	if (is_null($val)) {
 		return $def;
 	} else {
@@ -155,13 +154,13 @@ function infra_session_get($name = '', $def = null)
 function infra_session_set($name = '', $value = null)
 {
 	//if(infra_session_get($name)===$value)return; //если сохранена ссылка то изменение её не попадает в базу данных и не синхронизируется
-	$right = infra_seq_right($name);
+	$right = Sequence::right($name);
 
 	if (is_null($value)) {
 		//Удаление свойства
 		$last = array_pop($right);
 		$val = infra_session_get($right);
-		if ($last && infra_isAssoc($val) === true) {
+		if ($last && Each::isAssoc($val) === true) {
 			//Имеем дело с ассоциативным массивом
 			$iselse = false;
 			foreach ($val as $i => $valval) {
@@ -336,11 +335,11 @@ function infra_session_change($session_id, $pass = null)
 			//Надо подчистить 2 таблицы
 			if ($session_id_old) {
 				//хз бывает ли такое что его нет
-				$conf = infra_config();
+				$conf = Infra::config();
 				$tables = $conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
 				$db = infra_db();
 
-				infra_forr($tables, function () use ($session_id_old, $session_id, &$db) {
+				Each::forr($tables, function () use ($session_id_old, $session_id, &$db) {
 					$sql = 'UPDATE images SET session_id = ? WHERE session_id = ?;';
 					$stmt = $db->prepare($sql);
 					$stmt->execute(array($session_id, $session_id_old));
@@ -390,14 +389,14 @@ function &infra_session_user_init($email)
 		}
 
 		$obj = array();
-		infra_forr($news, function (&$v) use (&$obj) {
+		Each::forr($news, function (&$v) use (&$obj) {
 			if ($v['value'] == 'null') {
 				$value = null;
 			} else {
-				$value = infra_json_decode($v['value']);
+				$value = Load::json_decode($v['value']);
 			}
-			$right = infra_seq_right($v['name']);
-			$obj = infra_seq_set($obj, $right, $value);
+			$right = Sequence::right($v['name']);
+			$obj = Sequence::set($obj, $right, $value);
 		});
 
 		return $obj;
@@ -406,8 +405,8 @@ function &infra_session_user_init($email)
 function infra_session_user_get($email, $short = array(), $def = null)
 {
 	$obj = &infra_session_user_init($email);
-	$right = infra_seq_right($short);
-	$value = infra_seq_get($obj, $right);
+	$right = Sequence::right($short);
+	$value = Sequence::get($obj, $right);
 	if (is_null($value)) {
 		$value = $def;
 	}
@@ -432,8 +431,8 @@ function infra_session_user_set($email, $short = array(), $value = null)
 	}
 	$obj = &infra_session_user_init($email);
 
-	$right = infra_seq_right($short);
-	infra_seq_set($obj, $right, $value);
+	$right = Sequence::right($short);
+	Sequence::set($obj, $right, $value);
 
 	$list = array();
 	$list['name'] = $right;
@@ -454,11 +453,11 @@ function infra_session_writeNews($list, $session_id)
 	$stmt = $db->prepare($sql);
 	$sql = 'delete from `ses_records` where `session_id`=? and `name`=? and `time`<=FROM_UNIXTIME(?)';
 	$delstmt = $db->prepare($sql);
-	infra_fora($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
+	Each::fora($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
 		if (!$isphp && $rec['name'][0] == 'safe') {
 			return;
 		}
-		$name = infra_seq_short($rec['name']);
+		$name = Sequence::short($rec['name']);
 		$delstmt->execute(array($session_id, $name, $rec['time']));
 		$stmt->execute(array($session_id, $name, infra_json_encode($rec['value']), $rec['time']));
 	});

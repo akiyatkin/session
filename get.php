@@ -1,11 +1,11 @@
 <?php
 
-use infrajs\infra\ext\Ans;
+use infrajs\ans\Ans;
 
 infra_test(true);
-infra_require('*session/session.php');
+Path::req('*session/session.php');
 $ans = array();
-$name = infra_toutf($_REQUEST['name']);
+$name = Path::toutf($_REQUEST['name']);
 
 $ans['data'] = infra_session_get($name);
 

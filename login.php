@@ -1,7 +1,6 @@
 <?php
 
-infra_require('*infra/ext/seq.php');
-infra_require('*session/session.php');
+Path::req('*session/session.php');
 
 $ans = array();
 $id = $_REQUEST['id'];
@@ -16,7 +15,7 @@ if (!$src) {
 } else {
 	$src = '?'.$src;
 }
-$conf = infra_config();
+$conf = Infra::config();
 $path = 'http://'.infra_view_getHost().'/';
 $dirs = infra_dirs();
 $path .= infra_view_getRoot().$src;

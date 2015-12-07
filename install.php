@@ -26,7 +26,7 @@ try {
 }
 
 if ($r === false) {
-	infra_error(print_r($db->errorInfo(), true));
+	Ans::err(print_r($db->errorInfo(), true));
 }
 
 $sql = <<<END

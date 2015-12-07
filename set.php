@@ -1,12 +1,12 @@
 <?php
 
-use infrajs\infra\ext\Ans;
+use infrajs\ans\Ans;
 
-infra_require('*session/session.php');
+Path::req('*session/session.php');
 infra_test(true);
 $ans = array();
-$name = infra_toutf($_REQUEST['name']);
-$val = infra_toutf($_REQUEST['val']);
+$name = Path::toutf($_REQUEST['name']);
+$val = Path::toutf($_REQUEST['val']);
 
 infra_session_set($name, $val);
 
