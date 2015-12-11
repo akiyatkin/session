@@ -133,6 +133,7 @@ function &infra_session_make($list, &$data = array())
 {
 	Each::fora($list, function ($li) use (&$data) {
 		$data = &Sequence::set($data, $li['name'], $li['value']);
+		$r=null; return $r;
 	});
 
 	return $data;
@@ -454,11 +455,11 @@ function infra_session_writeNews($list, $session_id)
 	$sql = 'delete from `ses_records` where `session_id`=? and `name`=? and `time`<=FROM_UNIXTIME(?)';
 	$delstmt = $db->prepare($sql);
 	Each::fora($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
-		if (!$isphp && $rec['name'][0] == 'safe') {
-			return;
-		}
+		$r=null; 
+		if (!$isphp && $rec['name'][0] == 'safe') return $r;
 		$name = Sequence::short($rec['name']);
 		$delstmt->execute(array($session_id, $name, $rec['time']));
 		$stmt->execute(array($session_id, $name, infra_json_encode($rec['value']), $rec['time']));
+		return $r;
 	});
 }

@@ -28,6 +28,7 @@ $list = Load::json_decode($_POST['list']);
 
 Each::fora($list, function (&$li) use ($time) {
 	$li['time'] = $time;
+	$r=null; return $r;
 });
 
 if ($session_id) {
