@@ -78,7 +78,7 @@ if ($session_id && $timelast <= $time) {
 				++$ans['counter'];
 				$ans['del'] = $v;
 
-				return new infra_Fix('del');
+				return new Fix('del');
 			}
 		});
 	}
