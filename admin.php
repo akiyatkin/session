@@ -1,6 +1,15 @@
 <?php
+namespace infrajs\infra;
+use infrajs\access\Access;
+use infrajs\event\Event;
+use infrajs\ans\Ans;
 
-infra_test(true);
+if (!is_file('vendor/autoload.php')) {
+	chdir('../../../../');
+	require_once('vendor/autoload.php');
+}
+
+Access::test(true);
 
 Path::req('*session/session.php');
 
@@ -12,9 +21,9 @@ if (!empty($_GET['id'])) {
 	$id = infra_session_getId();
 }
 
-$db = infra_db();
+$db = Db::pdo();
 
-$stmt = infra_stmt('select count(*) from ses_sessions');
+$stmt = Db::stmt('select count(*) from ses_sessions');
 $stmt->execute();
 $data['count'] = $stmt->fetchColumn();
 
@@ -26,4 +35,4 @@ $data['data'] = print_r($data['data'], true);
 $data['user'] = infra_session_getUser($id);
 $data['user'] = print_r($data['user'], true);
 
-echo infra_template_parse('*session/admin.tpl', $data);
+echo Template::parse('*session/admin.tpl', $data);

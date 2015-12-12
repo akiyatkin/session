@@ -5,7 +5,7 @@ Path::req('*session/session.php');
 $ans = array();
 
 try {
-	$db = &infra_db();
+	$db = &Db::pdo();
 } catch (Exception $e) {
 	$db = false;
 }
@@ -33,7 +33,7 @@ Each::fora($list, function (&$li) use ($time) {
 
 if ($session_id) {
 	$session_id = Once::exec('sync_php_checksession', function ($session_id, $session_pass) {
-		$db = &infra_db();
+		$db = &Db::pdo();
 		$sql = 'select password from ses_sessions where session_id=?';
 		$stmt = $db->prepare($sql);
 		$stmt->execute(array($session_id));

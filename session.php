@@ -222,7 +222,7 @@ function infra_session_getText($name,$def){ //load для <texarea>...
 
 function infra_session_setPass($password, $session_id = null)
 {
-	$db = &infra_db();
+	$db = &Db::pdo();
 	if (!$db) {
 		return;
 	}
@@ -248,7 +248,7 @@ function infra_session_getEmail($session_id = false)
 }
 function infra_session_setEmail($email)
 {
-	$db = &infra_db();
+	$db = &Db::pdo();
 	if (!$db) {
 		return;
 	}
@@ -271,7 +271,7 @@ function infra_session_getVerify()
 function infra_session_setVerify()
 {
 	$session_id = infra_session_getId();
-	$db = &infra_db();
+	$db = &Db::pdo();
 	if (!$db) {
 		return;
 	}
@@ -288,7 +288,7 @@ function infra_session_getUser($email = null)
 	}
 
 	return Once::exec('infra_session_getUser', function ($email) {
-		$db = &infra_db();
+		$db = &Db::pdo();
 		if (!$db) {
 			return;
 		}
@@ -338,7 +338,7 @@ function infra_session_change($session_id, $pass = null)
 				//хз бывает ли такое что его нет
 				$conf = Infra::config();
 				$tables = $conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
-				$db = infra_db();
+				$db = Db::pdo();
 
 				Each::forr($tables, function () use ($session_id_old, $session_id, &$db) {
 					$sql = 'UPDATE images SET session_id = ? WHERE session_id = ?;';
@@ -380,7 +380,7 @@ function &infra_session_user_init($email)
 
 	return Once::exec('infra_session_user_init', function ($session_id) {
 		$sql = 'select name, value, unix_timestamp(time) as time from ses_records where session_id=? order by time,rec_id';
-		$db = infra_db();
+		$db = Db::pdo();
 		$stmt = $db->prepare($sql);
 		$stmt->execute(array($session_id));
 		$news = $stmt->fetchAll();
@@ -447,7 +447,7 @@ function infra_session_writeNews($list, $session_id)
 	if (!$list) {
 		return;
 	}
-	$db = infra_db();
+	$db = Db::pdo();
 	global $infra_session_lasttime;
 	$isphp = !!$infra_session_lasttime;
 	$sql = 'insert into `ses_records`(`session_id`, `name`, `value`, `time`) VALUES(?,?,?,FROM_UNIXTIME(?))';

@@ -1,4 +1,8 @@
 <?php
+namespace infrajs\session;
+use infrajs\path\Path;
+use infrajs\view\View;
+use infrajs\infra\Infra;
 
 Path::req('*session/session.php');
 
@@ -16,7 +20,7 @@ if (!$src) {
 	$src = '?'.$src;
 }
 $conf = Infra::config();
-$path = 'http://'.infra_view_getHost().'/';
-$dirs = infra_dirs();
-$path .= infra_view_getRoot().$src;
+$path = 'http://'.View::getHost().'/';
+
+$path .= View::getRoot().$src;
 @header('Location: '.$path);

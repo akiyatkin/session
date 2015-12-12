@@ -1,6 +1,6 @@
 <?php
 
-$db = &infra_db();
+$db = &Db::pdo();
 
 if (!$db) {
 	return;

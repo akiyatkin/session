@@ -1,16 +1,16 @@
 <?php
 
-
+use infrajs\ans\Ans;
 $ans = array();
 $ans['title'] = 'Проверка сессии на сервере';
-
+return Ans::err($ans,'Не дописан тест');
 $conf=Infra::config();
 if(!$conf['infra']['mysql']){
 	$ans['class']='bg-warning';
 	return Ans::err($ans,'infra.mysql=false Нет разрешения на использование базы данных');
 }
 
-$db=&infra_db();
+$db=&Db::pdo();
 if(!$db){
 	return Ans::err($ans,'Не удалось соединиться с базой данных');
 }
@@ -26,7 +26,7 @@ if (!$conf['session']['sync']) {
 if (!class_exists('PDO')) {
 	return Ans::err($ans, 'class PDO is required');
 }
-$db = &infra_db();
+$db = &Db::pdo();
 if (!$db) {
 	return Ans::err($ans, 'ERROR нет базы данных');
 }
