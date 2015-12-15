@@ -2,7 +2,7 @@
 <html>
 <head>
 	<link href="vendor/twbs/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-	<script src="?*infra/js.php"></script>
+	<script src="?-infra/js.php"></script>
 	<script src="vendor/components/jquery/jquery.js"></script>
 	<script src="vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script>infra.Crumb.init()</script>
@@ -31,19 +31,19 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="?*infra/tests.php">Tests</a>
+		  <a class="navbar-brand" href="?-infra/tests.php">Tests</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav">
-				<li role="presentation"><a href="?*infra/tests.php">tests</a></li>
-				<li role="presentation"><a href="?*infra/admin.php">admin</a></li>
-				<li role="presentation"><a href="?*imager/admin.php">imager</a></li>
-				<li role="presentation"><a href="?*infra/install.php">install</a></li>
-				<li role="presentation"><a href="?*infra/dirs.php">dirs</a></li>
-				<li role="presentation"><a href="?*infra/config.php">config</a></li>
-				<li role="presentation"><a href="?*session/admin.php">session</a></li>
+				<li role="presentation"><a href="?-infra/tests.php">tests</a></li>
+				<li role="presentation"><a href="?-infra/admin.php">admin</a></li>
+				<li role="presentation"><a href="?-imager/admin.php">imager</a></li>
+				<li role="presentation"><a href="?-infra/install.php">install</a></li>
+				<li role="presentation"><a href="?-infra/dirs.php">dirs</a></li>
+				<li role="presentation"><a href="?-infra/config.php">config</a></li>
+				<li role="presentation"><a href="?-session/admin.php">session</a></li>
 				<li role="presentation"><a href="./">site</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->

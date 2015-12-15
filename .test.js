@@ -2,12 +2,12 @@ infra.wait(infrajs,'onshow',function(){
 	var test=infra.test;
 	var server={
 		set:function(name,value){
-			var path='?*session/set.php?name='+name+'&val='+value;
+			var path='?-session/set.php?name='+name+'&val='+value;
 			infra.unload(path);
 			var r=infra.loadJSON(path);
 		},
 		get:function(name){
-			var path='?*session/get.php?name='+name;
+			var path='?-session/get.php?name='+name;
 			infra.unload(path);
 			var r=infra.loadJSON(path);
 			return r['data'];
@@ -34,9 +34,9 @@ infra.wait(infrajs,'onshow',function(){
 				return;
 			}
 			console.info('Fix');
-			console.log('?*session/get.php?name=guarantee');
-			console.log('?*session/set.php?name=guarantee&val=ok');
-			console.log('?*session/set.php?name=guarantee');
+			console.log('?-session/get.php?name=guarantee');
+			console.log('?-session/set.php?name=guarantee&val=ok');
+			console.log('?-session/set.php?name=guarantee');
 			if (clt) {
 				return test.err('На сервере значения нет, а в браузере есть');
 			}

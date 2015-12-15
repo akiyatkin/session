@@ -4,7 +4,7 @@ use infrajs\path\Path;
 use infrajs\view\View;
 use infrajs\infra\Infra;
 
-Path::req('*session/session.php');
+Path::req('-session/session.php');
 
 $ans = array();
 $id = $_REQUEST['id'];

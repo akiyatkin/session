@@ -26,9 +26,9 @@ view объект - на клиенте создаваемый, как view=infr
 /**/
 
 
-//infra.load('*infra/default.js','r');
+//infra.load('-infra/default.js','r');
 
-infra.require('*infra/ext/seq.js');
+infra.require('-infra/ext/seq.js');
 /*
 	С помощью init получется объект сессии
 	var session=infra.session;
@@ -51,7 +51,7 @@ infra.session={
 		var host=infra.view.getHost();
 		var path=infra.view.getRoot();
 		var pass=infra.view.getCookie(this._getName('pass'));
-		var link='http://'+host+'/'+path+'?*session/login.php?id='+id+'&pass='+pass;
+		var link='http://'+host+'/'+path+'?-session/login.php?id='+id+'&pass='+pass;
 		return link;
 	},
 	_getName:function(name){
@@ -191,7 +191,7 @@ infra.session={
 		var data={//id и time берутся из кукисов на сервере
 			list:this.source(list)
 		}
-		var load_path=infra.theme('*session/sync.php');
+		var load_path=infra.theme('-session/sync.php');
 
 		$.ajax({
 			url:load_path,

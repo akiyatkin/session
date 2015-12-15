@@ -59,7 +59,7 @@ function infra_session_recivenews($list = array())
 
 	$data = array( //id и time берутся из кукисов на сервере
 		'time' => $infra_session_time,
-		'list' => infra_json_encode($list),
+		'list' => Load::json_encode($list),
 	);
 	global $infra_session_lasttime;
 	$infra_session_lasttime = true;//Метка что вызов из php
@@ -68,7 +68,7 @@ function infra_session_recivenews($list = array())
 	$_POST = $data;
 	$_REQUEST = $data;
 
-	$src = '*session/sync.php';
+	$src = '-session/sync.php';
 
 	infra_unload($src);
 	$ans = Load::loadJSON($src);
@@ -201,7 +201,7 @@ function infra_session_getLink($email = false)
 		$pass = infra_view_getCookie(infra_session_getName('pass'));
 		$id = infra_view_getCookie(infra_session_getName('id'));
 	}
-	$link = 'http://'.$host.'/'.$path.'?*session/login.php?id='.$id.'&pass='.$pass;
+	$link = 'http://'.$host.'/'.$path.'?-session/login.php?id='.$id.'&pass='.$pass;
 
 	return $link;
 }
@@ -459,7 +459,7 @@ function infra_session_writeNews($list, $session_id)
 		if (!$isphp && $rec['name'][0] == 'safe') return $r;
 		$name = Sequence::short($rec['name']);
 		$delstmt->execute(array($session_id, $name, $rec['time']));
-		$stmt->execute(array($session_id, $name, infra_json_encode($rec['value']), $rec['time']));
+		$stmt->execute(array($session_id, $name, Load::json_encode($rec['value']), $rec['time']));
 		return $r;
 	});
 }

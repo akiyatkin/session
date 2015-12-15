@@ -11,7 +11,7 @@ if (!is_file('vendor/autoload.php')) {
 
 Access::test(true);
 
-Path::req('*session/session.php');
+Path::req('-session/session.php');
 
 $data = array();
 
@@ -35,4 +35,4 @@ $data['data'] = print_r($data['data'], true);
 $data['user'] = infra_session_getUser($id);
 $data['user'] = print_r($data['user'], true);
 
-echo Template::parse('*session/admin.tpl', $data);
+echo Template::parse('-session/admin.tpl', $data);

@@ -1,6 +1,6 @@
 <?php
 use infrajs\once\Once;
-Path::req('*session/session.php');
+Path::req('-session/session.php');
 
 $ans = array();
 

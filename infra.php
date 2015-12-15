@@ -11,9 +11,9 @@ use infrajs\template\Template;
 use infrajs\controller\External;
 
 
-Path::reqif('*controller/infra.php');
+Path::reqif('-controller/infra.php');
 
-Path::req('*session/session.php');
+Path::req('-session/session.php');
 	
 $cl = function ($name, $def = null) { return infra_session_get($name, $def); };
 Sequence::set(Template::$scope, Sequence::right('infra.session.get'), $cl);

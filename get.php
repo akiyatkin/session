@@ -11,7 +11,7 @@ if (!is_file('vendor/autoload.php')) {
 
 Access::test(true);
 
-Path::req('*session/session.php');
+Path::req('-session/session.php');
 $ans = array();
 $name = Path::toutf($_REQUEST['name']);
 
