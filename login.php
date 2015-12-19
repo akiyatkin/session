@@ -19,7 +19,7 @@ if (!$src) {
 } else {
 	$src = '?'.$src;
 }
-$conf = Infra::config();
+$conf = Config::get();
 $path = 'http://'.View::getHost().'/';
 
 $path .= View::getRoot().$src;

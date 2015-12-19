@@ -336,7 +336,7 @@ function infra_session_change($session_id, $pass = null)
 			//Надо подчистить 2 таблицы
 			if ($session_id_old) {
 				//хз бывает ли такое что его нет
-				$conf = Infra::config();
+				$conf = Config::get();
 				$tables = $conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
 				$db = Db::pdo();
 
