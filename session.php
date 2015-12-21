@@ -1,5 +1,6 @@
 <?php
 use infrajs\once\Once;
+use infrajs\nostore\Nostore;
 /*
 Copyright 2011 ITLife, Ltd. Togliatti, Samara Oblast, Russian Federation. http://itlife-studio.ru
 	
@@ -99,7 +100,7 @@ function infra_session_getPass()
 function infra_session_getId()
 {
 	Once::exec('infra_session_getId_cache', function () {
-		header('Cache-Controll: no-store');
+		Nostore::on();
 	});
 
 	return (int) infra_view_getCookie(infra_session_getName('id'));
