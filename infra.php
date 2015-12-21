@@ -1,7 +1,7 @@
 <?php
 namespace infrajs\crumb;
 use infrajs\controller\Controller;
-use infrajs\infra\Each;
+use infrajs\each\Each;
 use infrajs\controller\Run;
 use infrajs\controller\Layer;
 use infrajs\path\Path;
