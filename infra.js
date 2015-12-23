@@ -1,4 +1,4 @@
-define('?-session/infra.js', ['?-event/event.js'], function (Event) {
+define('/-session/infra.js', ['/-event/event.js'], function (Event) {
 	Event.wait(infrajs,'oninit',function(){
 		//session и template
 		infra.seq.set(infra.template.scope,infra.seq.right('infra.session.get'),function(name,def){

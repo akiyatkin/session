@@ -28,7 +28,7 @@ view объект - на клиенте создаваемый, как view=infr
 
 //infra.load('-infra/default.js','r');
 
-define('?-session/session.js', ['?-sequence/sequence.js'],function(sequence){
+define('/-session/session.js', ['/-sequence/sequence.js'],function(sequence){
 
 	/*
 		С помощью init получется объект сессии
