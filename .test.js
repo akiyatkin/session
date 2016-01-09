@@ -1,4 +1,4 @@
-infra.wait(infrajs,'onshow',function(){
+Event.one('Infrajs.onshow', function(){
 	var test=infra.test;
 	var server={
 		set:function(name,value){
