@@ -180,7 +180,7 @@ infra.session={
 			
 			callback();
 
-			infra.fire(infra.session,'onsync');
+			Event.fire('Session.onsync');
 		}.bind(this);
 		var data={//id и time берутся из кукисов на сервере
 			list:this.source(list)
@@ -340,7 +340,7 @@ infra.session={
 					this.stor.save(sentname,false);//Всё записалось в sent и после успешной отправки очистится
 					callback(err);
 				}
-				infra.fire(infra.session,'onsync');
+				Event.fire('Session.onsync');
 			}.bind(this));//синхронно вызываем сразу, вразрез с асинхронными
 		}
 
@@ -384,14 +384,14 @@ infra.session={
 					infra.forr(calls,function(ca){ ca(true) });
 					this.syncing=false;
 					conf.session.sync=false;//Ошибка отправка на сервер больше не будет работать пока не обновится страница
-					infra.fire(infra.session,'onsync');
+					Event.fire('Session.onsync');
 				}else{
 					var r=next();
 					if(!r){//А если был запрос, попадём сюда снова после его окончания
 						var calls=this.syncing;//Чтоб небыло замыканий прежде чем запускать обработчики очищается syncing
 						this.syncing=false;
 						infra.forr(calls,function(ca){ ca(false) });
-						infra.fire(infra.session,'onsync');
+						Event.fire('Session.onsync');
 					}
 				}
 			}.bind(this));
