@@ -437,18 +437,18 @@ infra.session={
 		}
 		return str;
 	},
-	make:function(list,data){
+	make: function(list, data) {
 		infra.fora(list,function(li){
 			if(!li)return;
 			data=infra.seq.set(data,li.name,li.value);
 		}.bind(this));
 		return data;
 	},
-	get:function(name,def){//data может быть undefined. get всегда синхронный сессия синхронно в первый раз синхронизировалась.
+	get: function (name, def) { //data может быть undefined. get всегда синхронный сессия синхронно в первый раз синхронизировалась.
 		this.init();
-		name=infra.seq.right(name);
-		var val=infra.seq.get(this.data,name);
-		if(val===undefined)return def;
+		name = infra.seq.right(name);
+		var val = infra.seq.get(this.data, name);
+		if (typeof(val) === 'undefined') return def;
 		return val;
 	},
 	set:function(name,value,sync,fn){
