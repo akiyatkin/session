@@ -4,5 +4,5 @@
 	"interval":1,
 	"change_session_tables":[],
 	"dependencies":"event",
-	"js":["session.js","infra.js"]
+	"js":["Session.js","infra.js"]
 }
