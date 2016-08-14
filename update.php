@@ -1,5 +1,7 @@
 <?php
 
+use infrajs\db\Db;
+
 $db = &Db::pdo();
 
 if (!$db) {

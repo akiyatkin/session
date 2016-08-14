@@ -2,8 +2,14 @@
 	"name": "infrajs/session",
 	"description": "Client and server session",
 	"license": "GPL3",
+	"autoload": {
+        "psr-4": { "infrajs\\session\\": "/" }
+    },
 	"require": {
 		"infrajs/once": "~1",
-		"infrajs/db": "~1"
+		"infrajs/db": "~1",
+		"infrajs/ans": "~1",
+		"infrajs/sequence":"~1",
+		"infrajs/view":"~1"
 	}
 }
