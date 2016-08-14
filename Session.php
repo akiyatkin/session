@@ -2,6 +2,9 @@
 namespace infrajs\session;
 use infrajs\once\Once;
 use infrajs\view\View;
+use infrajs\load\Load;
+use infrajs\each\Each;
+use infrajs\db\Db;
 use infrajs\sequence\Sequence;
 use infrajs\nostore\Nostore;
 
@@ -63,7 +66,7 @@ class Session
 	}
 	public static function getPass()
 	{
-		return infra_view_getCookie(Session::getName('pass'));
+		return View::getCookie(Session::getName('pass'));
 	}
 	public static function getId()
 	{
@@ -71,11 +74,11 @@ class Session
 			Nostore::on();
 		});
 
-		return (int) infra_view_getCookie(Session::getName('id'));
+		return (int) View::getCookie(Session::getName('id'));
 	}
 	public static function getTime()
 	{
-		return infra_view_getCookie(Session::getName('time'));
+		return View::getCookie(Session::getName('time'));
 	}
 	public static function syncNow()
 	{
@@ -269,9 +272,9 @@ class Session
 		if (!$email) {
 			return;
 		}
-		infra_view_setCookie(Session::getName('pass'));
-		infra_view_setCookie(Session::getName('id'));
-		infra_view_setCookie(Session::getName('time'));
+		View::setCookie(Session::getName('pass'));
+		View::setCookie(Session::getName('id'));
+		View::setCookie(Session::getName('time'));
 		Session::syncNow();
 	}
 	public static function change($session_id, $pass = null)
@@ -319,9 +322,9 @@ class Session
 			$pass = md5($user['password']);
 		}
 
-		infra_view_setCookie(Session::getName('pass'), $pass);
-		infra_view_setCookie(Session::getName('id'), $session_id);
-		infra_view_setCookie(Session::getName('time'), 1);
+		View::setCookie(Session::getName('pass'), $pass);
+		View::setCookie(Session::getName('id'), $session_id);
+		View::setCookie(Session::getName('time'), 1);
 		Session::syncNow();
 	}
 	public static function &user_init($email)

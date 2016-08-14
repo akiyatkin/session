@@ -1,6 +1,16 @@
 <?php
 use infrajs\once\Once;
-Path::req('-session/session.php');
+use infrajs\view\View;
+use infrajs\db\Db;
+use infrajs\ans\Ans;
+use infrajs\session\Session;
+use infrajs\router\Router;
+
+if (!is_file('vendor/autoload.php')) {
+	chdir('../../../');
+	require_once('vendor/autoload.php');
+	Router::init();
+}
 
 $ans = array();
 
@@ -14,10 +24,10 @@ if (!$db) {
 	return Ans::err($ans, 'Нет соединения с базой данных. Сессия только в браузере.');
 }
 
-$session_id = infra_view_getCookie('infra_session_id');
-$session_pass = infra_view_getCookie('infra_session_pass');
+$session_id = View::getCookie('infra_session_id');
+$session_pass = View::getCookie('infra_session_pass');
 
-$timelast = isset($_REQUEST['time']) ? (int) $_REQUEST['time'] : infra_view_getCookie('infra_session_time');
+$timelast = isset($_REQUEST['time']) ? (int) $_REQUEST['time'] : View::getCookie('infra_session_time');
 if (!$timelast) {
 	$timelast = 0;
 }
@@ -92,8 +102,8 @@ if ($list) {
 		$stmt = $db->prepare($sql);
 		$stmt->execute(array($pass));
 		$session_id = $db->lastInsertId();
-		infra_view_setCookie('infra_session_id', $session_id);
-		infra_view_setCookie('infra_session_pass', md5($pass));
+		View::setCookie('infra_session_id', $session_id);
+		View::setCookie('infra_session_pass', md5($pass));
 	}
 	infra_session_writeNews($list, $session_id);
 	//$ans['news']=array_merge($news,$list);
