@@ -3,15 +3,17 @@ use infrajs\once\Once;
 use infrajs\view\View;
 use infrajs\db\Db;
 use infrajs\ans\Ans;
+use infrajs\each\Each;
+use infrajs\load\Load;
 use infrajs\session\Session;
+use infrajs\sequence\Sequence;
 use infrajs\router\Router;
 
 if (!is_file('vendor/autoload.php')) {
-	chdir('../../../');
+	chdir(explode('vendor/', __DIR__)[0]);
 	require_once('vendor/autoload.php');
 	Router::init();
 }
-
 $ans = array();
 
 try {
@@ -35,6 +37,8 @@ if (!$timelast) {
 $time = time();//время синхронизации и время записываемых данных, устанавливается в cookie
 $ans['time'] = $time;
 $list = Load::json_decode($_POST['list']);
+
+if ($list) die('asdf');
 
 Each::fora($list, function (&$li) use ($time) {
 	$li['time'] = $time;
@@ -73,7 +77,7 @@ if ($session_id && $timelast <= $time) {
 			$v['name'] = Sequence::right($v['name']);
 			$r = Each::forr($list, function ($item) use (&$v, &$ans) {
 				//Устанавливаемое значение ищим в новости
-				if (infra_seq_contain($item['name'], $v['name']) !== false) {
+				if (Sequence::contain($item['name'], $v['name']) !== false) {
 					return true;//найдено совпадение новости с устанавливаемым значением.. новость удаляем
 				}
 
@@ -105,7 +109,7 @@ if ($list) {
 		View::setCookie('infra_session_id', $session_id);
 		View::setCookie('infra_session_pass', md5($pass));
 	}
-	infra_session_writeNews($list, $session_id);
+	Session::writeNews($list, $session_id);
 	//$ans['news']=array_merge($news,$list);
 }
 

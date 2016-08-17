@@ -7,6 +7,8 @@ use infrajs\each\Each;
 use infrajs\db\Db;
 use infrajs\sequence\Sequence;
 use infrajs\nostore\Nostore;
+use infrajs\config\Config;
+use PDO;
 
 global $infra_session_data;
 class Session
@@ -27,9 +29,7 @@ class Session
 	public static function recivenews($list = array())
 	{
 		global $infra_session_time;
-		if (!$infra_session_time) {
-			$infra_session_time = 1;
-		}
+		if (!$infra_session_time) $infra_session_time = 1;
 
 		$data = array( //id и time берутся из кукисов на сервере
 			'time' => $infra_session_time,
@@ -57,9 +57,7 @@ class Session
 	{
 		//новое значение, //Отправляется пост на файл, который записывает и возвращает данные
 		$ans = Session::recivenews($list);
-		if (!$ans) {
-			return;
-		}
+		if (!$ans) return;
 		//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
 		global $infra_session_data;
 		$infra_session_data = Session::make($ans['news'], $infra_session_data);
@@ -93,11 +91,9 @@ class Session
 	public static function sync($list = null)
 	{
 		$session_id = Session::getId();
-
 		if (!$session_id && !$list) {
 			return;//Если ничего не устанавливается и нет id то sync не делается
 		}
-
 		Session::syncreq($list);
 	}
 
@@ -145,7 +141,7 @@ class Session
 				if (!$iselse) {
 					//В объекте ничего больше нет кроме удаляемого свойства... или и его может даже нет
 					//Зачит надо удалить и сам объект
-					return Sessino::set($right, null);
+					return Session::set($right, null);
 				} else {
 					array_push($right, $last);//Если есть ещё что-то то работает в обычном режиме
 				}
@@ -250,7 +246,7 @@ class Session
 			if (!$db) {
 				return;
 			}
-			if (infra_isInt($email)) {
+			if (Each::isInt($email)) {
 				$sql = 'select * from ses_sessions where session_id=?';
 			} else {
 				$sql = 'select * from ses_sessions where email=?';
