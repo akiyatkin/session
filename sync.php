@@ -38,8 +38,6 @@ $time = time();//время синхронизации и время запис�
 $ans['time'] = $time;
 $list = Load::json_decode($_POST['list']);
 
-if ($list) die('asdf');
-
 Each::fora($list, function (&$li) use ($time) {
 	$li['time'] = $time;
 	$r=null; return $r;

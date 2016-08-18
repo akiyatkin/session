@@ -13,11 +13,8 @@ if (!is_file('vendor/autoload.php')) {
 }
 Access::test(true);
 
-/*$time = time();
-Session::get();
-Session::set('safe.confirmtime', $time);
-echo $time;*/
 
+Session::get();
 
 $ans = array();
 return Ans::ret($ans);
