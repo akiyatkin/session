@@ -3,6 +3,7 @@ namespace infrajs\infra;
 use infrajs\access\Access;
 use infrajs\event\Event;
 use infrajs\ans\Ans;
+use infrajs\session\Session;
 
 if (!is_file('vendor/autoload.php')) {
 	chdir('../../../../');
@@ -10,11 +11,9 @@ if (!is_file('vendor/autoload.php')) {
 }
 
 Access::test(true);
-
-Path::req('-session/session.php');
 $ans = array();
 $name = Path::toutf($_REQUEST['name']);
 
-$ans['data'] = infra_session_get($name);
+$ans['data'] = Session::get($name);
 
 return Ans::ret($ans);

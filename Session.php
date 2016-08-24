@@ -122,7 +122,7 @@ class Session
 	}
 	public static function set($name = '', $value = null)
 	{
-		//if(infra_session_get($name)===$value)return; //если сохранена ссылка то изменение её не попадает в базу данных и не синхронизируется
+		//if(Session::get($name)===$value)return; //если сохранена ссылка то изменение её не попадает в базу данных и не синхронизируется
 		$right = Sequence::right($name);
 
 		if (is_null($value)) {
