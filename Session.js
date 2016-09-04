@@ -452,31 +452,31 @@ Session = {
 		return val;
 	},
 	set:function(name,value,sync,fn){
-		if(value&&typeof(value)=='object'&&value.constructor!=Array){
-			for(var i in value)break;
-			if(!i){
+		if (value && typeof(value) == 'object' && value.constructor != Array) {
+			for (var i in value) break;
+			if (!i) {
 				//alert('Запись в сессию пустого объекта невозможна,\nИначе объект {} превратится на сервере в массив []\nукажите в объекте какое-то свойство. Запись в '+name);
-				value=null;
+				value = null;
 			}
 		}
 		
-		var right=infra.seq.right(name);
-		if(value===null||typeof(value)=='undefined'){//Удаление свойства	
-			var last=right.pop();
-			var val=infra.session.get(right);
+		var right = infra.seq.right(name);
+		if (right.length > 1 && value === null || typeof(value) == 'undefined') { //Удаление свойства	
+			var last = right.pop();
+			var val = infra.session.get(right);
 			
-			if(last&&val&&typeof(val)=='object'&&val.constructor!=Array){
-				var iselse=false;
-				for(var i in val){
-					if(i!=last){
-						iselse=true;
+			if (last && val && typeof(val) == 'object' && val.constructor != Array) {
+				var iselse = false;
+				for (var i in val) {
+					if (i != last) {
+						iselse = true;
 						break;
 					}
 				}
-				if(!iselse){//В объекте ничего больше нет кроме удаляемого свойства... или и его может даже нет
+				if (!iselse) {//В объекте ничего больше нет кроме удаляемого свойства... или и его может даже нет
 					//Зачит надо удалить и сам объект
-					return infra.session.set(right,null,sync,fn);
-				}else{
+					return infra.session.set(right, null, sync, fn);
+				} else {
 					right.push(last);//Если есть ещё что-то то работает в обычном режиме
 				}
 			}

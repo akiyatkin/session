@@ -99,11 +99,10 @@ class Session
 
 	public static function &make($list, &$data = array())
 	{
-		Each::fora($list, function ($li) use (&$data) {
-			$data = &Sequence::set($data, $li['name'], $li['value']);
+		Each::exec($list, function ($li) use (&$data) {
+			$data = Sequence::set($data, $li['name'], $li['value']);
 			$r=null; return $r;
 		});
-
 		return $data;
 	}
 	public static function get($name = '', $def = null)
@@ -398,20 +397,19 @@ class Session
 	}
 	public static function writeNews($list, $session_id)
 	{
-		if (!$list) {
-			return;
-		}
-		$db = Db::pdo();
+		if (!$list) return;
+		$db = &Db::pdo();
 		global $infra_session_lasttime;
 		$isphp = !!$infra_session_lasttime;
 		$sql = 'insert into `ses_records`(`session_id`, `name`, `value`, `time`) VALUES(?,?,?,FROM_UNIXTIME(?))';
 		$stmt = $db->prepare($sql);
 		$sql = 'delete from `ses_records` where `session_id`=? and `name`=? and `time`<=FROM_UNIXTIME(?)';
 		$delstmt = $db->prepare($sql);
-		Each::fora($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
-			$r=null; 
+		Each::exec($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
+			$r = null;
 			if (!$isphp && $rec['name'][0] == 'safe') return $r;
 			$name = Sequence::short($rec['name']);
+			if (!$isphp && !$name) return $r;
 			$delstmt->execute(array($session_id, $name, $rec['time']));
 			$stmt->execute(array($session_id, $name, Load::json_encode($rec['value']), $rec['time']));
 			return $r;

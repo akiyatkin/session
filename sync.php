@@ -4,6 +4,7 @@ use infrajs\view\View;
 use infrajs\db\Db;
 use infrajs\ans\Ans;
 use infrajs\each\Each;
+use infrajs\each\Fix;
 use infrajs\load\Load;
 use infrajs\session\Session;
 use infrajs\sequence\Sequence;
@@ -22,9 +23,8 @@ try {
 	$db = false;
 }
 
-if (!$db) {
-	return Ans::err($ans, 'Нет соединения с базой данных. Сессия только в браузере.');
-}
+if (!$db) return Ans::err($ans, 'Нет соединения с базой данных. Сессия только в браузере.');
+
 
 $session_id = View::getCookie('infra_session_id');
 $session_pass = View::getCookie('infra_session_pass');
@@ -67,31 +67,28 @@ if ($session_id && $timelast <= $time) {
 	if ($list) {
 		$ans['list'] = $list;
 	}
+
 	//$ans['orignews']=$news;
 	if ($news) {
 		$ans['news'] = $news;
-		Each::forr($ans['news'], function (&$v) use ($list, &$ans) {
-			$v['value'] = Load::json_decode($v['value'], true);
-			$v['name'] = Sequence::right($v['name']);
-			$r = Each::forr($list, function ($item) use (&$v, &$ans) {
+		Each::fora($ans['news'], function (&$n) use ($list, &$ans) {
+			$n['value'] = Load::json_decode($n['value'], true);
+			$n['name'] = Sequence::right($n['name']);
+			$r = Each::exec($list, function ($item) use (&$n, &$ans) {
 				//Устанавливаемое значение ищим в новости
-				if (Sequence::contain($item['name'], $v['name']) !== false) {
-					return true;//найдено совпадение новости с устанавливаемым значением.. новость удаляем
-				}
-
+				
+				//найдено совпадение новости с устанавливаемым значением.. новость удаляем
+				$a = Sequence::contain($item['name'], $n['name']);
+				if ($a || $a == array()) return true; //news Длиннее... и часть новости изменена в устанавливаемом значение
+				$ans['a'] = $a;
 				//Новость ищим в устанавливаемом значение
-				$right = infra_seq_contain($v['name'], $item['name']);
+				$right = Sequence::contain($n['name'], $item['name']);
 				if ($right) {
-					$v['value'] = Sequence::set($v['value'], $right, $item['value']);//Новость осталась но она включает устанавливаемые данные
+					$n['value'] = Sequence::set($n['value'], $right, $item['value']);//Новость осталась но она включает устанавливаемые данные
 				}
 			});
 
-			if ($r) {
-				++$ans['counter'];
-				$ans['del'] = $v;
-
-				return new Fix('del');
-			}
+			if ($r) return new Fix('del');
 		});
 	}
 }
