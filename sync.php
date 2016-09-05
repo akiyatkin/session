@@ -30,17 +30,15 @@ $session_id = View::getCookie('infra_session_id');
 $session_pass = View::getCookie('infra_session_pass');
 
 $timelast = isset($_REQUEST['time']) ? (int) $_REQUEST['time'] : View::getCookie('infra_session_time');
-if (!$timelast) {
-	$timelast = 0;
-}
-
+if (!$timelast) $timelast = 0;
+$ans['timelast'] = $timelast;
 $time = time();//время синхронизации и время записываемых данных, устанавливается в cookie
 $ans['time'] = $time;
 $list = Load::json_decode($_POST['list']);
 
-Each::fora($list, function (&$li) use ($time) {
-	$li['time'] = $time;
-	$r=null; return $r;
+Each::exec($list, function (&$li) use ($time) {
+	$li['time'] = $time; //У каждого сета добавляем его момет, что бы он начал попадат в выборку по времени в своём периуде
+	$r = null; return $r;
 });
 
 if ($session_id) {
