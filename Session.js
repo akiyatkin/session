@@ -36,7 +36,7 @@ Session = {
 	init:function(){
 		this.init=function(){};
 		var list=this.storageLoad();
-		this.data=this.make(list,{});
+		this.data=this.make(list,null);
 		this.syncNow();
 	},
 	getLink:function(){
@@ -79,37 +79,33 @@ Session = {
 			}
 		}
 		return {
-			load:function(name){
-				if(is){
-					var path=infra.view.getPath();
-					var val=window.localStorage[path+'.'+name];
-				}else if(isses){
-					var path=infra.view.getPath();
-					var val=window.sessionStorage[path+'.'+name];
-				}else if(iestor){
+			load:function(name) {
+				if (is) {
+					var val = window.localStorage['session.' + name];
+				} else if(isses) {
+					var val = window.sessionStorage['session.' + name];
+				} else if(iestor) {
 					iestor.load('namespace');
-					var val=iestor.getAttribute(name);
-				}else{
+					var val = iestor.getAttribute(name);
+				} else {
 					//var view=infra.View.init();
 					//name=view.setCOOKIE(this._getName('time'),0);//Хранение локально невозможно
-					var val=localstor[name];
+					var val = localstor[name];
 				}
 				//infra.exec(val,'session stor ar');
 				try {
-					if(val)val=eval('('+val+')');
-				}catch(e){
-					val=[];
+					if (val) val = eval('(' + val + ')');
+				} catch (e) {
+					val = [];
 				}
 				return val;
 			},
-			save:function(name,list){
-				list=infra.session.source(list);
-				if(is){
-					var path=infra.view.getPath();
-					window.localStorage[path+'.'+name]=list;
+			save: function (name, list) {
+				list = Session.source(list);
+				if (is) {
+					window.localStorage['session.' + name] = list;
 				}else if(isses){
-					var path=infra.view.getPath();
-					window.sessionStorage[path+'.'+name]=list;
+					window.sessionStorage['session.' + name]=list;
 				}else if(iestor){
 					iestor.setAttribute(name,list);
 					iestor.save('namespace');
@@ -194,11 +190,11 @@ Session = {
 			type:'POST',
 			data:data,
 			dataType: 'json',
-			complete: function(req) {
-				try{
-					var ans=eval("("+req.responseText+")");
-				}catch(e){
-					var ans=false;
+			complete: function (req) {
+				try {
+					var ans = eval("("+req.responseText+")");
+				} catch (e) {
+					var ans = false;
 				}
 
 				cb(ans);
@@ -206,21 +202,23 @@ Session = {
 		});
 	},
 	clear:function(cb){
-		if(!cb)cb=function(){};
-		var data=infra.session.get();
-		var counter=0;
-		var check=function(){
-			if(counter)return;
+		Session.set('',null, false, cb);
+		/*if (!cb) cb = function () { };
+		var data = Session.get();
+		var counter = 0;
+		var check = function () {
+			if (counter) return;
 			cb();
 		}
-		infra.foro(data,function(val,name){
+		for (var name in data) {
+			var val = data[name];
 			counter++;
-			infra.session.set(name,null,false,function(){
+			Session.set(name,null,false,function(){
 				counter--;
 				check();
 			});
-		});
-		check();
+		}
+		check();*/
 	},
 	logout:function(){
 		var view=infra.view;
@@ -313,31 +311,29 @@ Session = {
 		return true;
 	},
 	_sync:function(list,sync,callback){// Сюда попадает пулл запросво в одном setTimeout 1
-		var sentname=this._getName('sent');
-		var waitname=this._getName('wait');
+		var sentname = this._getName('sent');
+		var waitname = this._getName('wait');
 		
 
-		var wait=this.stor.load(waitname);//Задержка
-		if(wait&&list)		wait.push(list);
-		else if(wait&&!list) 	wait=wait;
-		else if(!wait&&list)	wait=[list];
-		else if(!wait&&!list)	wait=[];
-		wait=this.right(wait);
-		var conf=infra.config();
+		var wait = this.stor.load(waitname);//Задержка
+		if (wait && list) wait.push(list);
+		else if (wait && !list) wait = wait;
+		else if (!wait && list)	wait = [list];
+		else if (!wait && !list) wait = [];
+		wait = this.right(wait);
+		var conf = Config.get();
 
-		if(conf.session.sync&&sync){//Если просто вызыван sync с одним параметром или без
-			this.stor.save(sentname,wait);//Всё записалось в sent и после успешной отправки очистится
-			this.stor.save(waitname,false);//wait становится пустым, но пока будет отправка он может наполняться
+		if (conf.session.sync && sync){//Если просто вызыван sync с одним параметром или без
+			this.stor.save(sentname, wait);//Всё записалось в sent и после успешной отправки очистится
+			this.stor.save(waitname, false);//wait становится пустым, но пока будет отправка он может наполняться
 
-			return this.syncreq(wait,sync,function(err){
-
-				if(err){
-					this.stor.save(waitname,wait);
-					this.stor.save(sentname,false);
+			return this.syncreq(wait, sync, function (err) {
+				if (err) {
+					this.stor.save(waitname, wait);
+					this.stor.save(sentname, false);
 					callback(err);
-				}else{
-
-					this.stor.save(sentname,false);//Всё записалось в sent и после успешной отправки очистится
+				} else {
+					this.stor.save(sentname, false);//Всё записалось в sent и после успешной отправки очистится
 					callback(err);
 				}
 				Event.fire('Session.onsync');
@@ -484,18 +480,18 @@ Session = {
 
 
 
-		var li={name:right,value:value};
-		if(li.name[0]=='safe'){
-			if(fn)fn();
+		var li = { name:right, value:value };
+		if (right[0] == 'safe') {
+			if (fn) fn();
 			return false;
 		}
 		//При set делается 2 действия
 
 
-		this.storageSave(li);//Задержка!!!!
-		this.dataSave(li);
+		Session.storageSave(li);//Задержка!!!!
+		Session.dataSave(li);
 
-		this.sync(li,sync,fn);//2 true синхронно
+		Session.sync(li,sync,fn);//2 true синхронно
 	},
 	getValue:function(name,def){//load для <input value="...
 		var value=this.get(name);

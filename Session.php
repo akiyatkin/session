@@ -11,6 +11,7 @@ use infrajs\config\Config;
 use PDO;
 
 global $infra_session_data;
+$infra_session_data = null;
 class Session
 {
 	public static function initId() {
@@ -225,9 +226,7 @@ class Session
 	{
 		$session_id = Session::getId();
 		$db = &Db::pdo();
-		if (!$db) {
-			return;
-		}
+		if (!$db) return;
 		$sql = 'UPDATE ses_sessions
 					SET verify = 1
 					WHERE session_id=?';
@@ -236,15 +235,11 @@ class Session
 	}
 	public static function getUser($email = null)
 	{
-		if (!$email) {
-			$email = Session::getId();
-		}
+		if (!$email) $email = Session::getId();
 
 		return Once::exec(__FILE__.'getUser', function ($email) {
 			$db = &Db::pdo();
-			if (!$db) {
-				return;
-			}
+			if (!$db) return;
 			if (Each::isInt($email)) {
 				$sql = 'select * from ses_sessions where session_id=?';
 			} else {
@@ -260,13 +255,26 @@ class Session
 
 	public static function clear()
 	{
+		$db = &Db::pdo();
+		if (!$db) return;
+		$session_id = Session::getId();
+		if (!$session_id) return;
+
+		global $infra_session_data;
+		$safe = $infra_session_data['safe'];
+		//Удалить всё и сделать запись '', null и safe
+		$sql = 'delete from `ses_records` where `session_id`=?';
+		$stmt = $db->prepare($sql);
+		$r = $stmt->execute(array($session_id));
+		$infra_session_data = array();
+		if ($safe) {
+			Session::set('safe', $safe);
+		}
 	}
 	public static function logout()
 	{
 		$email = Session::getEmail();
-		if (!$email) {
-			return;
-		}
+		if (!$email) return;
 		View::setCookie(Session::getName('pass'));
 		View::setCookie(Session::getName('id'));
 		View::setCookie(Session::getName('time'));
@@ -409,9 +417,12 @@ class Session
 			$r = null;
 			if (!$isphp && $rec['name'][0] == 'safe') return $r;
 			$name = Sequence::short($rec['name']);
-			if (!$isphp && !$name) return $r;
 			$delstmt->execute(array($session_id, $name, $rec['time']));
 			$stmt->execute(array($session_id, $name, Load::json_encode($rec['value']), $rec['time']));
+			if (!$isphp && !$name) {
+				//Сохранится safe
+				Session::clear();
+			}
 			return $r;
 		});
 	}

@@ -1,23 +1,29 @@
 <?php
-namespace infrajs\session;
+use infrajs\session\Session;
 use infrajs\path\Path;
 use infrajs\view\View;
+use infrajs\config\Config;
 use infrajs\infra\Infra;
 
-Path::req('-session/session.php');
+
+if (!is_file('vendor/autoload.php')) {
+	chdir(explode('vendor/', __DIR__)[0]);
+	require_once('vendor/autoload.php');
+}
 
 $ans = array();
 $id = $_REQUEST['id'];
 $pass = $_REQUEST['pass'];//md5 пароля, чтобы авторизоваться не нужно знать пароль, хэша достаточно.
 $src = $_REQUEST['src'];
-if ($pass && $id) {
-	infra_session_change($id, $pass);
+
+if ($id && $pass) {
+	Session::change($id, $pass);
 }
 
 if (!$src) {
 	$src = '';
 } else {
-	$src = '?'.$src;
+	$src = '/'.$src;
 }
 $conf = Config::get();
 $path = 'http://'.View::getHost().'/';
