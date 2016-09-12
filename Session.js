@@ -160,7 +160,7 @@ Session = {
 		}
 	},
 	syncreq:function(list,sync,callback){//новое значение, //Отправляется пост на файл, который записывает и возвращает данные
-		var cb=function(ans){
+		var cb = function(ans){
 			if(!ans||!ans.result)return callback('error');
 			//if(ans.msg)alert(ans.msg);
 			if(!ans.auth){
@@ -175,7 +175,7 @@ Session = {
 			this.dataSave(ans.news);
 			
 			callback();
-
+			Event.tik('Session.onsync');
 			Event.fire('Session.onsync');
 		}.bind(this);
 		var data={//id и time берутся из кукисов на сервере
@@ -336,7 +336,8 @@ Session = {
 					this.stor.save(sentname, false);//Всё записалось в sent и после успешной отправки очистится
 					callback(err);
 				}
-				Event.fire('Session.onsync');
+				//Event.tik('Session.onsync');
+				//Event.fire('Session.onsync');
 			}.bind(this));//синхронно вызываем сразу, вразрез с асинхронными
 		}
 
@@ -380,14 +381,16 @@ Session = {
 					infra.forr(calls,function(ca){ ca(true) });
 					this.syncing=false;
 					conf.session.sync=false;//Ошибка отправка на сервер больше не будет работать пока не обновится страница
-					Event.fire('Session.onsync');
+					//Event.tik('Session.onsync');
+					//Event.fire('Session.onsync');
 				}else{
 					var r=next();
-					if(!r){//А если был запрос, попадём сюда снова после его окончания
+					if (!r) {//А если был запрос, попадём сюда снова после его окончания
 						var calls=this.syncing;//Чтоб небыло замыканий прежде чем запускать обработчики очищается syncing
 						this.syncing=false;
 						infra.forr(calls,function(ca){ ca(false) });
-						Event.fire('Session.onsync');
+						//Event.tik('Session.onsync');
+						//Event.fire('Session.onsync');
 					}
 				}
 			}.bind(this));

@@ -15,8 +15,7 @@ Access::admin(true);
 $ans = array();
 
 if (isset($_GET['get'])) {
-	
-	$name = Path::toutf($_REQUEST['name']);
+	$name = Ans::REQ('name');
 	$ans['id'] = Session::getId();
 	$ans['data'] = Session::get($name);
 
