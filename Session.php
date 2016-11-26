@@ -100,7 +100,7 @@ class Session
 
 	public static function &make($list, &$data = array())
 	{
-		Each::exec($list, function ($li) use (&$data) {
+		Each::exec($list, function &($li) use (&$data) {
 			$data = Sequence::set($data, $li['name'], $li['value']);
 			$r=null; return $r;
 		});
@@ -413,7 +413,7 @@ class Session
 		$stmt = $db->prepare($sql);
 		$sql = 'delete from `ses_records` where `session_id`=? and `name`=? and `time`<=FROM_UNIXTIME(?)';
 		$delstmt = $db->prepare($sql);
-		Each::exec($list, function ($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
+		Each::exec($list, function &($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
 			$r = null;
 			if (!$isphp && $rec['name'][0] == 'safe') return $r;
 			$name = Sequence::short($rec['name']);
