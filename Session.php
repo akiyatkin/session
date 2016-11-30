@@ -47,7 +47,11 @@ class Session
 
 		Load::unload($src);
 		$ans = Load::loadJSON($src);
-		$infra_session_time = $ans['time'];
+		if (isset($ans['time'])) {
+			$infra_session_time = $ans['time'];
+		} else {
+			$infra_session_time = null;
+		}
 		
 		$_POST = $oldPOST;
 		$_REQUEST = $oldREQ;
@@ -61,7 +65,9 @@ class Session
 		if (!$ans) return;
 		//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
 		global $infra_session_data;
-		$infra_session_data = Session::make($ans['news'], $infra_session_data);
+		if (isset($ans['news'])) {
+			$infra_session_data = Session::make($ans['news'], $infra_session_data);
+		}
 	}
 	public static function getPass()
 	{
@@ -106,7 +112,7 @@ class Session
 		});
 		return $data;
 	}
-	public static function get($name = '', $def = null)
+	public static function &get($name = '', $def = null)
 	{
 		Once::exec(__FILE__.'getinitsync', function () {
 			Session::sync();
@@ -301,10 +307,12 @@ class Session
 					$tables = $conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
 					$db = Db::pdo();
 
-					Each::forr($tables, function () use ($session_id_old, $session_id, &$db) {
+					Each::forr($tables, function &() use ($session_id_old, $session_id, &$db) {
 						$sql = 'UPDATE images SET session_id = ? WHERE session_id = ?;';
 						$stmt = $db->prepare($sql);
 						$stmt->execute(array($session_id, $session_id_old));
+						$r = null;
+						return $r;
 					});
 
 					$sql = 'DELETE from ses_records where session_id=?';
@@ -351,7 +359,8 @@ class Session
 			}
 
 			$obj = array();
-			Each::forr($news, function (&$v) use (&$obj) {
+			Each::forr($news, function &(&$v) use (&$obj) {
+				$r = null;
 				if ($v['value'] == 'null') {
 					$value = null;
 				} else {
@@ -359,6 +368,7 @@ class Session
 				}
 				$right = Sequence::right($v['name']);
 				$obj = Sequence::set($obj, $right, $value);
+				return $r;
 			});
 
 			return $obj;

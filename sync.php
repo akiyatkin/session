@@ -69,7 +69,7 @@ if ($session_id && $timelast <= $time) {
 	//$ans['orignews']=$news;
 	if ($news) {
 		$ans['news'] = $news;
-		Each::fora($ans['news'], function (&$n) use ($list, &$ans) {
+		Each::fora($ans['news'], function &(&$n) use ($list, &$ans) {
 			$n['value'] = Load::json_decode($n['value'], true);
 			$n['name'] = Sequence::right($n['name']);
 			$r = Each::exec($list, function &($item) use (&$n, &$ans) {
@@ -90,7 +90,12 @@ if ($session_id && $timelast <= $time) {
 				return $r;
 			});
 
-			if ($r) return new Fix('del');
+			if ($r) {
+				$del = new Fix('del');
+				return $del;
+			}
+			$r = null;
+			return $r;
 		});
 	}
 }
