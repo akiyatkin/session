@@ -93,6 +93,7 @@ class Session
 		}
 		//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
 		global $infra_session_data;
+		if(empty($ans['news'])) $ans['news'] = array();
 		$infra_session_data = Session::make($ans['news'], $infra_session_data);
 	}
 	public static function sync($list = null)
