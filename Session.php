@@ -429,6 +429,8 @@ class Session
 			if (!$isphp && $rec['name'][0] == 'safe') return $r;
 			$name = Sequence::short($rec['name']);
 			$delstmt->execute(array($session_id, $name, $rec['time']));
+			
+			if(!isset($rec['value'])) $rec['value'] = null;
 			$stmt->execute(array($session_id, $name, Load::json_encode($rec['value']), $rec['time']));
 			if (!$isphp && !$name) {
 				//Сохранится safe
