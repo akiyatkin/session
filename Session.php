@@ -164,19 +164,16 @@ class Session
 	public static function getLink($email = false)
 	{
 		$host = View::getHost();
-		$path = View::getRoot();
 		if ($email) {
 			$user = Session::getUser($email);
-			if (!$user) {
-				return 'http://'.$host.'/'.$path;
-			}
+			if (!$user) return 'http://'.$host.'/';
 			$pass = md5($user['password']);
 			$id = $user['session_id'];
 		} else {
 			$pass = View::getCookie(Session::getName('pass'));
 			$id = View::getCookie(Session::getName('id'));
 		}
-		$link = 'http://'.$host.'/'.$path.'?-session/login.php?id='.$id.'&pass='.$pass;
+		$link = 'http://'.$host.'/-session/login.php?id='.$id.'&pass='.$pass;
 
 		return $link;
 	}
