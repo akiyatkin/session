@@ -161,12 +161,25 @@ Session = {
 	},
 	syncreq:function(list,sync,callback){//новое значение, //Отправляется пост на файл, который записывает и возвращает данные
 		var cb = function(ans){
-			if(!ans||!ans.result)return callback('error');
+			if (!ans||!ans.result) return callback('Некорректный ответ сервера');
 			//if(ans.msg)alert(ans.msg);
+
+			//Если по инициативе сервера был выход, нужно сбросить клиентскую сессию
 			if(!ans.auth){
 				this.logout();
 				return callback();
 			}
+			/*if (ans.created) {
+				this.storageSave([],true);
+				this.data={};
+				var sentname=this._getName('sent');
+				var waitname=this._getName('wait');
+				this.stor.save(waitname,false);
+				this.stor.save(sentname,false);
+				
+				this.storageSave(list);
+				this.dataSave(list);
+			}*/
 			var timename=this._getName('time');
 			infra.view.setCookie(timename,ans.time);//Время определяется на сервере, выставляется на клиенте
 			
@@ -241,6 +254,10 @@ Session = {
 		var view=infra.view;
 		return view.getCOOKIE(this._getName('time'));
 	},
+	is: function () {
+		for (var i in this.data) return true;
+		return false;
+	},
 	right:function(list){
 		var rsent=[]; 
 		infra.fora(list,function(li){
@@ -262,7 +279,7 @@ Session = {
 	},
 	sync:function(list,sync,callback){//false,false,callback
 		if(!callback)callback=function(){};
-		if(!this.getId()&&(!list||(list.constructor==Array&&list.length==0))){//Если ничего не устанавливается и нет id то sync не делается
+		if(!this.getId()&&(!list||(list.constructor==Array&&list.length==0))&&!this.is()){//Если ничего не устанавливается и нет id то sync не делается
 			return callback();
 		}
 

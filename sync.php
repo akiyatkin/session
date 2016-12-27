@@ -117,6 +117,7 @@ if ($list) {
 		View::setCookie('infra_session_id', $session_id);
 		View::setCookie('infra_session_pass', md5($pass));
 		$ans['auth'] = true;
+		//$ans['created'] = true;
 	}
 	Session::writeNews($list, $session_id);
 	//$ans['news']=array_merge($news,$list);

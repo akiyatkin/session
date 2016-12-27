@@ -280,7 +280,7 @@ class Session
 		$email = Session::getEmail();
 		if (!$email) return;
 		View::setCookie(Session::getName('pass'));
-		View::setCookie(Session::getName('id'));
+		View::setCookie(Session::getName('id')); //id Должен остаться чтобч клиент обратился к серверу
 		View::setCookie(Session::getName('time'));
 		Session::syncNow();
 	}
@@ -295,7 +295,7 @@ class Session
 				//А вот новая сессия аторизированна, значит нужно объединить сессии и грохнуть старую
 				$newans = Session::recivenews();
 				//Нужно это всё записать в базу данных для сессии 1
-				Session::writeNews($newans['news'], $session_id);
+				if (!empty($newans['news'])) Session::writeNews($newans['news'], $session_id);
 
 				//Теперь старую сессию нужно удалить полностью
 				//Надо подчистить 2 таблицы
