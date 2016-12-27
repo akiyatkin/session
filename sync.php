@@ -29,7 +29,7 @@ if (!$db) return Ans::err($ans, 'Нет соединения с базой да�
 $session_id = View::getCookie('infra_session_id');
 $session_pass = View::getCookie('infra_session_pass');
 
-$timelast = isset($_REQUEST['time']) ? (int) $_REQUEST['time'] : View::getCookie('infra_session_time');
+$timelast = isset($_REQUEST['time']) ? (int) $_REQUEST['time'] : View::getCookie(Session::getName('time'));
 if (!$timelast) $timelast = 0;
 $ans['timelast'] = $timelast;
 $time = time();//время синхронизации и время записываемых данных, устанавливается в cookie
@@ -108,8 +108,15 @@ if ($list) {
 		$stmt = $db->prepare($sql);
 		$stmt->execute(array($pass));
 		$session_id = $db->lastInsertId();
+
+		/*if(!empty($_SERVER['HTTP_ORIGIN'])) {
+			header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
+			header('Access-Control-Allow-Credentials: true');
+		}*/
+
 		View::setCookie('infra_session_id', $session_id);
 		View::setCookie('infra_session_pass', md5($pass));
+		$ans['auth'] = true;
 	}
 	Session::writeNews($list, $session_id);
 	//$ans['news']=array_merge($news,$list);

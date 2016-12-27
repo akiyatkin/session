@@ -196,7 +196,6 @@ Session = {
 				} catch (e) {
 					var ans = false;
 				}
-
 				cb(ans);
 			}
 		});
