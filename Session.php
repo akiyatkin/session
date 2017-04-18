@@ -237,7 +237,7 @@ class Session
 		$stmt = $db->prepare($sql);
 		$stmt->execute(array($session_id));
 	}
-	public static function getUser($email = null)
+	public static function getUser($email = null, $re = false)
 	{
 		if (!$email) $email = Session::getId();
 
@@ -254,7 +254,7 @@ class Session
 			$userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 			return $userData;
-		}, array($email));
+		}, array($email), $re);
 	}
 
 	public static function clear()
