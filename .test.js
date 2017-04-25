@@ -1,4 +1,4 @@
-Event.one('Infrajs.onshow', function(){
+Event.one('Controller.onshow', function(){
 	var test=infra.test;
 	var server={
 		set:function(name,value){

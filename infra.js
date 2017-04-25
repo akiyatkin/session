@@ -1,4 +1,4 @@
-Event.one('Infrajs.oninit',function(){
+Event.one('Controller.oninit',function(){
 	//session и template
 	infra.seq.set(infra.template.scope,infra.seq.right('infra.session.get'),function(name,def){
 		return infra.session.get(name,def);
