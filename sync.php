@@ -66,7 +66,7 @@ if ($session_id && $timelast <= $time) {
 		$ans['list'] = $list;
 	}
 
-	//$ans['orignews']=$news;
+	//$ans['orignews'] = $news;
 	if ($news) {
 		$ans['news'] = $news;
 		Each::fora($ans['news'], function &(&$n) use ($list, &$ans) {
@@ -83,7 +83,7 @@ if ($session_id && $timelast <= $time) {
 					return $r; //news Длиннее... и часть новости изменена в устанавливаемом значение
 				}
 
-				$ans['a'] = $a;
+				//$ans['a'] = $a;
 				//Новость ищим в устанавливаемом значение
 				$right = Sequence::contain($n['name'], $item['name']);
 				if ($right) {
