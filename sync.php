@@ -77,10 +77,12 @@ if ($session_id && $timelast <= $time) {
 				$r = null;
 				//найдено совпадение новости с устанавливаемым значением.. новость удаляем
 				$a = Sequence::contain($item['name'], $n['name']);
-				if ($a || $a == array()) {
+
+				if ($a || $a === array()) {
 					$r = true;
 					return $r; //news Длиннее... и часть новости изменена в устанавливаемом значение
 				}
+
 				$ans['a'] = $a;
 				//Новость ищим в устанавливаемом значение
 				$right = Sequence::contain($n['name'], $item['name']);

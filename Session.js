@@ -181,7 +181,7 @@ Session = {
 				this.dataSave(list);
 			}*/
 			var timename=this._getName('time');
-			infra.view.setCookie(timename,ans.time);//Время определяется на сервере, выставляется на клиенте
+			View.setCookie(timename,ans.time);//Время определяется на сервере, выставляется на клиенте
 			
 			//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
 			this.storageSave(ans.news);
