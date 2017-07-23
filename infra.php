@@ -1,27 +1,19 @@
 <?php
-namespace infrajs\crumb;
-use infrajs\controller\Controller;
-use infrajs\each\Each;
-use infrajs\controller\Run;
-use infrajs\controller\Layer;
-use infrajs\path\Path;
 use infrajs\event\Event;
 use infrajs\sequence\Sequence;
 use infrajs\template\Template;
 use infrajs\session\Session;
-use infrajs\controller\External;
 
+Event::one('Controller.oninit', function () {
+	$cl = function ($name = null, $def = null) { return Session::get($name, $def); };
+	Sequence::set(Template::$scope, Sequence::right('Session.get'), $cl);
 
-Path::reqif('-controller/infra.php');
-	
-$cl = function ($name, $def = null) { return Session::get($name, $def); };
-Sequence::set(Template::$scope, Sequence::right('infra.session.get'), $cl);
+	$cl2 = function () { return Session::getLink(); };
+	Sequence::set(Template::$scope, Sequence::right('Session.getLink'), $cl2);
 
-$cl = function () { return Session::getLink(); };
-Sequence::set(Template::$scope, Sequence::right('infra.session.getLink'), $cl);
+	$cl3 = function () { return Session::getTime(); };
+	Sequence::set(Template::$scope, Sequence::right('Session.getTime'), $cl3);
 
-$cl = function () { return Session::getTime(); };
-Sequence::set(Template::$scope, Sequence::right('infra.session.getTime'), $cl);
-
-$cl = function () { return Session::getId(); };
-Sequence::set(Template::$scope, Sequence::right('infra.session.getId'), $cl);
+	$cl4 = function () { return Session::getId(); };
+	Sequence::set(Template::$scope, Sequence::right('Session.getId'), $cl4);
+});

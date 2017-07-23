@@ -1,15 +1,15 @@
-Event.one('Controller.oninit',function(){
+Event.one('Controller.oninit', function () { //Если есть контроллер. Подключение без прямой зависимости
 	//session и template
-	infra.seq.set(infra.template.scope,infra.seq.right('infra.session.get'),function(name,def){
-		return infra.session.get(name,def);
+	Sequence.set(Template.scope,Sequence.right('Session.get'),function(name,def){
+		return Session.get(name,def);
 	});
-	infra.seq.set(infra.template.scope,infra.seq.right('infra.session.getLink'),function(){
-		return infra.session.getLink();
+	Sequence.set(Template.scope,Sequence.right('Session.getLink'),function(){
+		return Session.getLink();
 	});
-	infra.seq.set(infra.template.scope,infra.seq.right('infra.session.getTime'),function(){
-		return infra.session.getTime();
+	Sequence.set(Template.scope,Sequence.right('Session.getTime'),function(){
+		return Session.getTime();
 	});
-	infra.seq.set(infra.template.scope,infra.seq.right('infra.session.getId'),function(){
-		return infra.session.getId();
+	Sequence.set(Template.scope,Sequence.right('Session.getId'),function(){
+		return Session.getId();
 	});
 });

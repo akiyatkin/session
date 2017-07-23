@@ -5,6 +5,7 @@
 	"update":"update.php",
 	"change_session_tables":[],
 	"dependencies":"event",
+	"require":"infra.php",
 	"tester":"tester.php",
 	"js":["Session.js","infra.js"]
 }

@@ -423,7 +423,7 @@ class Session
 		$delstmt = $db->prepare($sql);
 		Each::exec($list, function &($rec) use ($isphp, &$delstmt, &$stmt, $session_id) {
 			$r = null;
-			if (!$isphp && $rec['name'][0] == 'safe') return $r;
+			if (!$isphp && isset($rec['name'][0]) && $rec['name'][0] == 'safe') return $r;
 			$name = Sequence::short($rec['name']);
 			$delstmt->execute(array($session_id, $name, $rec['time']));
 			
