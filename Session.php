@@ -362,7 +362,7 @@ class Session
 				if ($v['value'] == 'null') {
 					$value = null;
 				} else {
-					$value = Load::json_decode($v['value']);
+					$value = Load::json_decode($v['value'], true);
 				}
 				$right = Sequence::right($v['name']);
 				$obj = Sequence::set($obj, $right, $value);
@@ -427,7 +427,7 @@ class Session
 			$name = Sequence::short($rec['name']);
 			$delstmt->execute(array($session_id, $name, $rec['time']));
 			
-			if(!isset($rec['value'])) $rec['value'] = null;
+			if(!isset($rec['value']) || mb_strlen($rec['value']) > 64000) $rec['value'] = null;
 			$stmt->execute(array($session_id, $name, Load::json_encode($rec['value']), $rec['time']));
 			if (!$isphp && !$name) {
 				//Сохранится safe
