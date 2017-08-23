@@ -427,7 +427,7 @@ class Session
 			$name = Sequence::short($rec['name']);
 			$delstmt->execute(array($session_id, $name, $rec['time']));
 			
-			if(!isset($rec['value']) || mb_strlen($rec['value']) > 64000) $rec['value'] = null;
+			if(!isset($rec['value']) || $rec['value'] && mb_strlen($rec['value']) > 64000) $rec['value'] = null;
 			$stmt->execute(array($session_id, $name, Load::json_encode($rec['value']), $rec['time']));
 			if (!$isphp && !$name) {
 				//Сохранится safe
