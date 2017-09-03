@@ -187,9 +187,12 @@ Session = {
 			this.storageSave(ans.news);
 			this.dataSave(ans.news);
 			
-			callback();
+			
 			Event.tik('Session.onsync');
-			Event.fire('Session.onsync');
+			Event.fire('Session.onsync'); //Сначало синхроинизируется корзина action=sync и сессия перезаписалась в файл заявки
+			
+			callback(); //Потом по окончанию синхронизации запускается Controller.check()
+
 		}.bind(this);
 		var data={//id и time берутся из кукисов на сервере
 			list:this.source(list)
