@@ -1,2 +1,10 @@
 # Сессия общая для сервера и клиента
-**Disclaimer:** Module is not complete and not ready for use yet.
+
+```js
+Session.set('user.name','Александр');
+Session.get('user.name');
+```
+
+# Работа с infrajs/router
+## REST-сервис
+/-session/rest
