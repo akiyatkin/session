@@ -1,7 +1,6 @@
 {
 	"name": "infrajs/session",
 	"description": "Client and server session",
-	"license": "GPL3",
 	"autoload": {
         "psr-4": { "infrajs\\session\\": "/" }
     },
