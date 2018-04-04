@@ -104,20 +104,16 @@ if ($session_id && $timelast <= $time) {
 
 if ($list) {
 	if (!$session_id) {
-		$pass = md5(print_r($list, true).time().rand());
-		$pass = substr($pass, 0, 8);
-		$sql = 'insert into `ses_sessions`(`password`) VALUES(?)';
-		$stmt = $db->prepare($sql);
-		$stmt->execute(array($pass));
-		$session_id = $db->lastInsertId();
+
+		$user = Session::createUser();
 
 		/*if(!empty($_SERVER['HTTP_ORIGIN'])) {
 			header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
 			header('Access-Control-Allow-Credentials: true');
 		}*/
-
-		View::setCookie('infra_session_id', $session_id);
-		View::setCookie('infra_session_pass', md5($pass));
+		$session_id = $user['session_id'];
+		View::setCookie('infra_session_id', $user['session_id']);
+		View::setCookie('infra_session_pass', md5($user['password']));
 		$ans['auth'] = true;
 		//$ans['created'] = true;
 	}

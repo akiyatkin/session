@@ -177,7 +177,18 @@ class Session
 
 		return $link;
 	}
-
+	public static function createUser($email = null) {
+		$db = &Db::pdo();
+		if (!$db) return;
+		$pass = md5(time().rand());
+		$pass = substr($pass, 0, 8);
+		$sql = 'insert into `ses_sessions`(`password`,`email`) VALUES(?,?)';
+		$stmt = $db->prepare($sql);
+		$stmt->execute(array($pass, $email));
+		$session_id = $db->lastInsertId();
+		$user = array('password' => $pass, 'session_id' => $session_id, 'email' => $email);
+		return $user;
+	}
 	public static function setPass($password, $session_id = null)
 	{
 		$db = &Db::pdo();
