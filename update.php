@@ -1,6 +1,7 @@
 <?php
 
 use infrajs\db\Db;
+use infrajs\ans\Ans;
 
 $db = &Db::pdo();
 
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `ses_sessions` (
   `date` DATETIME NULL DEFAULT NULL COMMENT 'Дата верификации',
   `verify` int(1) unsigned,
   PRIMARY KEY (`session_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 END;
 
 try {
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `ses_records` (
   `value` text NULL COMMENT 'Значение json переменной, NULL означает что переменная удалена',
   `time` datetime NOT NULL COMMENT 'PHP-дата записи',
   PRIMARY KEY (`rec_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 END;
 
 try {
