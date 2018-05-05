@@ -14,12 +14,19 @@ return Rest::get( function(){
 }, 'users', function () {
 	$db = Db::pdo();
 
-	$sql = 'SELECT email, date, verify from ses_sessions where email is not null';
+	$sql = 'SELECT email, date, verify, password from ses_sessions where email is not null';
 	$stmt = $db->prepare($sql);
 	$stmt->execute();
 	$table = $stmt->fetchAll();
 	$ans = array();
 	if (sizeof($table)) {
+		foreach ($table as $k => $v) {
+			foreach ($v as $i => $val) if (!$table[$k][$i]) $table[$k][$i] = '&nbsp;';
+		}
+		//echo '<pre>';
+		//print_r($table);
+		//exit;
+		
 		$ans['table'] = $table;
 		$ans['head'] = array_keys($table[0]);
 	}

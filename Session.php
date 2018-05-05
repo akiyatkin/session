@@ -181,7 +181,7 @@ class Session
 		$db = &Db::pdo();
 		if (!$db) return;
 		$pass = md5(time().rand());
-		$pass = substr($pass, 0, 8);
+		$pass = substr($pass, 0, 6);
 		$sql = 'insert into `ses_sessions`(`password`,`email`) VALUES(?,?)';
 		$stmt = $db->prepare($sql);
 		$stmt->execute(array($pass, $email));
@@ -340,6 +340,8 @@ class Session
 		if (is_null($pass)) {
 			$user = Session::getUser($session_id);
 			$pass = md5($user['password']);
+			//Пароль для новой сессии в куки
+			//$pass = substr($pass, 0, 6);
 		}
 
 		View::setCookie(Session::getName('pass'), $pass);
@@ -356,16 +358,14 @@ class Session
 			return Session::get();
 		}
 
-		return Once::exec(__FILE__.'user_init', function ($session_id) {
+		return Once::func( function ($session_id) {
 			$sql = 'select name, value, unix_timestamp(time) as time from ses_records where session_id=? order by time,rec_id';
 			$db = Db::pdo();
 			$stmt = $db->prepare($sql);
 			$stmt->execute(array($session_id));
 			$news = $stmt->fetchAll();
 
-			if (!$news) {
-				$news = array();
-			}
+			if (!$news) $news = array();
 
 			$obj = array();
 			Each::forr($news, function &(&$v) use (&$obj) {
