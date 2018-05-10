@@ -410,6 +410,8 @@ class Session
 		if (!$user) {
 			return 'Email Not Found';
 		}
+		global $infra_session_lasttime;
+		$infra_session_lasttime = true; //Метка чтобы safe записывались
 		$obj = &Session::user_init($email);
 
 		$right = Sequence::right($short);
