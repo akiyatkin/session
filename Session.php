@@ -342,6 +342,8 @@ class Session
 			$pass = md5($user['password']);
 			//Пароль для новой сессии в куки
 			//$pass = substr($pass, 0, 6);
+		} else {
+			$pass = md5($pass);
 		}
 
 		View::setCookie(Session::getName('pass'), $pass);
