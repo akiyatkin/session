@@ -237,9 +237,10 @@ class Session
 
 		return (bool) $user['verify'];
 	}
-	public static function setVerify()
+	public static function setVerify($email = null)
 	{
-		$session_id = Session::getId();
+		$user = Session::getUser($email);
+		$session_id = $user['session_id'];
 		$db = &Db::pdo();
 		if (!$db) return;
 		$sql = 'UPDATE ses_sessions
