@@ -8,10 +8,20 @@ $ans = array();
 $id = Ans::REQ('id','int');
 $pass = Ans::REQ('pass');//md5 пароля, чтобы авторизоваться не нужно знать пароль, хэша достаточно.
 $src = Ans::REQ('src','string','');
+$path = View::getPath().$src;
 
-if ($id && $pass) {
-	Session::change($id, $pass);
+$user = Session::getUser($id);
+if (!$id || !$pass) {
+	@header('Location: '.$path.'&error=1');
+}
+if (md5($user['password']) != $pass) {
+	@header('Location: '.$path.'&error=2');
 }
 
-$path = View::getPath().$src;
+
+Session::change($id, $user['password']);
+
 @header('Location: '.$path);
+
+
+

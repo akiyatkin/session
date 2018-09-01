@@ -18,7 +18,7 @@ class Session
 		//Инициализирует сессию если её нет и возвращает id
 		$id = Session::getId();
 		if (!$id) {
-			Session::set();
+			Session::createUser();
 		}
 
 		return Session::getId();
@@ -298,9 +298,11 @@ class Session
 	}
 	public static function change($session_id, $pass = null)
 	{
-		$email = Session::getEmail();
+		$email_old = Session::getEmail();
 		$session_id_old = Session::initId();
-		if (!$email) {
+		if ($session_id_old == $session_id) return;
+
+		if (!$email_old) {
 			//Текущая сессия не авторизированная
 			$email = Session::getEmail($session_id);
 			if ($email) {
@@ -317,8 +319,8 @@ class Session
 					$tables = $conf['session']['change_session_tables'];//Массив с таблицами в которых нужно изменить session_id неавторизированного пользователя, при авторизации
 					$db = Db::pdo();
 
-					Each::forr($tables, function &() use ($session_id_old, $session_id, &$db) {
-						$sql = 'UPDATE images SET session_id = ? WHERE session_id = ?;';
+					Each::forr($tables, function &($tbl) use ($session_id_old, $session_id, &$db) {
+						$sql = 'UPDATE '.$tbl.' SET session_id = ? WHERE session_id = ?;';
 						$stmt = $db->prepare($sql);
 						$stmt->execute(array($session_id, $session_id_old));
 						$r = null;
@@ -346,7 +348,6 @@ class Session
 		} else {
 			$pass = md5($pass);
 		}
-
 		View::setCookie(Session::getName('pass'), $pass);
 		View::setCookie(Session::getName('id'), $session_id);
 		View::setCookie(Session::getName('time'), 1);

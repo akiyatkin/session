@@ -18,7 +18,6 @@ if (isset($_GET['get'])) {
 	$name = Ans::REQ('name');
 	$ans['id'] = Session::getId();
 	$ans['data'] = Session::get($name);
-
 } else if (isset($_GET['clear'])) {	
 	
 	Session::clear();
