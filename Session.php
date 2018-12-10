@@ -231,29 +231,29 @@ class Session
 
 		return true;
 	}
-	public static function getVerify()
+	public static function getVerify($email = null)
 	{
-		$user = Session::getUser();
+		$user = Session::getUser($email);
 
 		return (bool) $user['verify'];
 	}
-	public static function setVerify($email = null)
+	public static function setVerify($email = null, $val = 1)
 	{
 		$user = Session::getUser($email);
 		$session_id = $user['session_id'];
 		$db = &Db::pdo();
 		if (!$db) return;
 		$sql = 'UPDATE ses_sessions
-					SET verify = 1
+					SET verify = ?
 					WHERE session_id=?';
 		$stmt = $db->prepare($sql);
-		$stmt->execute(array($session_id));
+		$stmt->execute(array($val, $session_id));
 	}
 	public static function getUser($email = null, $re = false)
 	{
 		if (!$email) $email = Session::getId();
-
-		return Once::exec(__FILE__.'getUser', function ($email) {
+		$name = __FILE__.'getUser';
+		return Once::exec($name, function ($email) {
 			$db = &Db::pdo();
 			if (!$db) return;
 			if (Each::isInt($email)) {
@@ -266,7 +266,8 @@ class Session
 			$userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 			return $userData;
-		}, array($email), $re);
+		}, array($email));
+		
 	}
 
 	public static function clear()
