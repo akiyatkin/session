@@ -34,6 +34,7 @@ if (!$timelast) $timelast = 0;
 $ans['timelast'] = $timelast;
 $time = time();//время синхронизации и время записываемых данных, устанавливается в cookie
 $ans['time'] = $time;
+if (!isset($_POST['list'])) $_POST['list'] = '[]';
 $list = Load::json_decode($_POST['list']);
 
 Each::exec($list, function &(&$li) use ($time) {
