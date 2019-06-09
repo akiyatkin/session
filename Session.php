@@ -29,8 +29,9 @@ class Session
 	}
 	public static function recivenews($list = array())
 	{
-		global $infra_session_time;
-		if (!$infra_session_time) $infra_session_time = 1;
+		//global $infra_session_time;
+		//if (!$infra_session_time) $infra_session_time = 1;
+		$infra_session_time = 0;
 
 		$data = array( //id и time берутся из кукисов на сервере
 			'time' => $infra_session_time,
