@@ -29,9 +29,8 @@ class Session
 	}
 	public static function recivenews($list = array())
 	{
-		//global $infra_session_time;
-		//if (!$infra_session_time) $infra_session_time = 1;
-		$infra_session_time = 0;
+		global $infra_session_time;
+		if (!$infra_session_time) $infra_session_time = 1;
 
 		$data = array( //id и time берутся из кукисов на сервере
 			'time' => $infra_session_time,
@@ -254,7 +253,7 @@ class Session
 	{
 		if (!$email) $email = Session::getId();
 		$name = __FILE__.'getUser';
-		return Once::exec($name, function ($email) {
+		//return Once::exec($name, function ($email) {
 			$db = &Db::pdo();
 			if (!$db) return;
 			if (Each::isInt($email)) {
@@ -267,7 +266,7 @@ class Session
 			$userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
 			return $userData;
-		}, array($email));
+		//}, array($email));
 		
 	}
 
