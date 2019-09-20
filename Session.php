@@ -31,6 +31,7 @@ class Session
 	{
 		global $infra_session_time;
 		if (!$infra_session_time) $infra_session_time = 1;
+		$infra_session_time = 1;
 
 		$data = array( //id и time берутся из кукисов на сервере
 			'time' => $infra_session_time,
@@ -308,6 +309,7 @@ class Session
 			$email = Session::getEmail($session_id);
 			if ($email) {
 				//А вот новая сессия аторизированна, значит нужно объединить сессии и грохнуть старую
+				
 				$newans = Session::recivenews();
 				//Нужно это всё записать в базу данных для сессии 1
 				if (!empty($newans['news'])) Session::writeNews($newans['news'], $session_id);
