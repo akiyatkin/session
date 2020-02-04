@@ -15,18 +15,30 @@ return Rest::get( function(){
 	$html = Rest::parse('-session/rest/layout.tpl');
 	return Ans::html($html);
 }, 'stat', function () {
-	$sql = 'SELECT table_schema "DB Name", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB", TABLE_ROWS FROM information_schema.tables GROUP BY table_schema';
+
 	$db = Db::pdo();
+	echo '<pre>';
+
+	$sql = 'SELECT table_schema "DB Name", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB", TABLE_ROWS FROM information_schema.tables GROUP BY table_schema';
 	$req = $db->prepare($sql);
 	$req->execute();
 	$res = $req->fetchAll();
-	echo '<pre>';
-	print_r($sql);
 	print_r($res);
+
+
+	$sql = 'SELECT table_name AS `Table`,
+round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB`, TABLE_ROWS
+FROM information_schema.TABLES
+WHERE table_schema = "'.Db::$conf['database'].'"';
+	$req = $db->prepare($sql);
+	$req->execute();
+	$res = $req->fetchAll();
+	print_r($res);
+
 	exit;
 	//ses_records
 	//ses_sessions
-	$db = Db::pdo();
+	
 }, 'clear', function () {
 	$db = Db::pdo();
 }, 'users', function () {
