@@ -40,7 +40,15 @@ WHERE table_schema = "'.Db::$conf['database'].'"';
 	//ses_sessions
 	
 }, 'clear', function () {
+	//Удалить все записи у пользователей без email старее 1 месяца.
 	$db = Db::pdo();
+	$sql = 'DELETE r,s FROM ses_records r
+RIGHT JOIN ses_sessions s ON s.session_id = r.session_id
+WHERE s.email is null';
+	$req = $db->prepare($sql);
+	$req->execute();
+	echo 'Удалено строк: '.$req->rowCount();
+	
 }, 'users', function () {
 	Access::admin(true);
 	$db = Db::pdo();
