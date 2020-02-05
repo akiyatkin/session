@@ -47,7 +47,7 @@ RIGHT JOIN ses_sessions s ON s.session_id = r.session_id
 WHERE s.email is null';
 	$req = $db->prepare($sql);
 	$req->execute();
-	echo 'Удалено строк: '.$req->rowCount();
+	echo 'Удалено записей и сессий по которым не было указанного email: '.$req->rowCount();
 	
 }, 'users', function () {
 	Access::admin(true);
