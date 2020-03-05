@@ -32,7 +32,7 @@ view объект - на клиенте создаваемый, как view=infr
 * @param {string} type тип сессии
 * @return {object}
 */
-Session = {
+window.Session = {
 	init:function(){
 		this.init=function(){};
 		var list=this.storageLoad();
