@@ -159,33 +159,33 @@ window.Session = {
 			},1);
 		}
 	},
-	syncreq:function(list,sync,callback){//новое значение, //Отправляется пост на файл, который записывает и возвращает данные
-		var cb = function(ans){
+	syncreq: async (list, sync, callback) => { //новое значение, //Отправляется пост на файл, который записывает и возвращает данные
+		var cb = (ans) => {
 			if (!ans||!ans.result) return callback('Некорректный ответ сервера');
 			//if(ans.msg)alert(ans.msg);
 
 			//Если по инициативе сервера был выход, нужно сбросить клиентскую сессию
 			if(!ans.auth){
-				this.logout();
+				Session.logout();
 				return callback();
 			}
 			/*if (ans.created) {
-				this.storageSave([],true);
-				this.data={};
-				var sentname=this._getName('sent');
-				var waitname=this._getName('wait');
-				this.stor.save(waitname,false);
-				this.stor.save(sentname,false);
+				Session.storageSave([],true);
+				Session.data={};
+				var sentname=Session._getName('sent');
+				var waitname=Session._getName('wait');
+				Session.stor.save(waitname,false);
+				Session.stor.save(sentname,false);
 				
-				this.storageSave(list);
-				this.dataSave(list);
+				Session.storageSave(list);
+				Session.dataSave(list);
 			}*/
-			var timename=this._getName('time');
+			var timename = Session._getName('time');
 			View.setCookie(timename,ans.time);//Время определяется на сервере, выставляется на клиенте
 			
 			//По сути тут set(news) но на этот раз просто sync вызываться не должен, а так всё тоже самое
-			this.storageSave(ans.news);
-			this.dataSave(ans.news);
+			Session.storageSave(ans.news);
+			Session.dataSave(ans.news);
 			
 			
 			Event.tik('Session.onsync');
@@ -193,13 +193,12 @@ window.Session = {
 			
 			callback(); //Потом по окончанию синхронизации запускается Controller.check()
 
-		}.bind(this);
+		};
 		var data={//id и time берутся из кукисов на сервере
-			list:this.source(list)
+			list:Session.source(list)
 		}
-		var load_path=infra.theme('-session/sync.php');
-
-		$.ajax({
+		var load_path = infra.theme('-session/sync.php');
+		let options = {
 			url:load_path,
 			timeout:120000,
 			async: !sync,
@@ -214,7 +213,16 @@ window.Session = {
 				}
 				cb(ans);
 			}
-		});
+		}
+		if (!sync) {
+			(async () => {
+				let CDN = (await import('/vendor/akiyatkin/load/CDN.js')).default
+				await CDN.load('jquery')
+				$.ajax(options);
+			})()
+		} else {
+			$.ajax(options);
+		}
 	},
 	clear:function(cb){
 		Session.set('',null, false, cb);
