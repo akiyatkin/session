@@ -284,20 +284,23 @@ window.Session = {
 	callbacks:[],
 	process:false,
 	process_timer:false,
-	syncNow:function(){
-		this.sync(null,true);
+	syncNow: ()=> {
+		Session.sync(null, true);
 		//Не срабатывает если id нет
 	},
-	sync:function(list,sync,callback){//false,false,callback
-		if(!callback)callback=function(){};
-		if(!this.getId()&&(!list||(list.constructor==Array&&list.length==0))&&!this.is()){//Если ничего не устанавливается и нет id то sync не делается
+	async: () => {
+		return new Promise(resolve => Session.sync(null, null, resolve))
+	},
+	sync: function (list, sync, callback) { //false,false,callback
+		if (!callback) callback = function (){ };
+		if (!this.getId() && (!list || (list.constructor == Array && list.length == 0)) && !this.is()){//Если ничего не устанавливается и нет id то sync не делается
 			return callback();
 		}
 
 		this.wait.push(list);
 		this.callbacks.push(callback);
 		var that=this;
-		if(sync){
+		if (sync) {
 			list=that.wait;
 			that.wait=[];
 			if(that.process){
@@ -311,7 +314,7 @@ window.Session = {
 					callbacks[i]();
 				}
 			});
-		}else{
+		} else {
 			if(that.process)return;
 			that.process=true;
 			clearTimeout(that.process_timer);
