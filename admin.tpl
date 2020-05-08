@@ -5,11 +5,14 @@
 	<script src="/-config/js.php"></script>
 	<script src="/vendor/components/jquery/jquery.js"></script>
 	<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script>infra.Crumb.init()</script>
+	<script type="module">
+		import {Crumb} from '/vendor/infrajs/controller/src/Crumb.js'
+		Crumb.init()
+	</script>
 </head>
 <body>
 	<form id="form">
-	Смотрим: <input name="id" value="{id}" onchange="infra.Crumb.go('?id='+this.value)"><br>
+	Смотрим: <input name="id" value="{id}" onchange="Crumb.go('?id='+this.value)"><br>
 	<input type="submit" style="display:none">
 	</form>
 	Всего: {count}<br>
