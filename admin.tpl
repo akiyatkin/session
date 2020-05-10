@@ -7,6 +7,7 @@
 	<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="module">
 		import {Crumb} from '/vendor/infrajs/controller/src/Crumb.js'
+		window.Crumb = Crumb
 		Crumb.init()
 	</script>
 </head>
