@@ -1,5 +1,7 @@
 import { Config } from '/vendor/infrajs/config/Config.js'
 import { View } from '/vendor/infrajs/view/View.js'
+import { Seq } from '/vendor/infrajs/sequence/Seq.js'
+import { Path } from '/vendor/infrajs/path/Path.js'
 /*	
 	var ses=infra.Session.init('base',view);
 
@@ -199,7 +201,7 @@ let Session = {
 		var data = {//id и time берутся из кукисов на сервере
 			list: Session.source(list)
 		}
-		var load_path = infra.theme('-session/sync.php');
+		var load_path = Path.theme('-session/sync.php');
 		let options = {
 			url: load_path,
 			timeout: 120000,
@@ -271,9 +273,9 @@ let Session = {
 	right: function (list) {
 		var rsent = [];
 		infra.fora(list, function (li) {
-			var short = infra.seq.short(li.name);
+			var short = Seq.short(li.name);
 			if (infra.forr(rsent, function (rli) {
-				if (infra.seq.short(rli.name) == short) return true;
+				if (Seq.short(rli.name) == short) return true;
 			})) return;
 			rsent.unshift(li);
 		}, true);
@@ -433,14 +435,14 @@ let Session = {
 	make: function (list, data) {
 		infra.fora(list, function (li) {
 			if (!li) return;
-			data = infra.seq.set(data, li.name, li.value);
+			data = Seq.set(data, li.name, li.value);
 		}.bind(this));
 		return data;
 	},
 	get: function (name, def) { //data может быть undefined. get всегда синхронный сессия синхронно в первый раз синхронизировалась.
 		this.init();
-		name = infra.seq.right(name);
-		var val = infra.seq.get(this.data, name);
+		name = Seq.right(name);
+		var val = Seq.get(this.data, name);
 		if (typeof (val) === 'undefined') return def;
 		return val;
 	},
@@ -453,7 +455,7 @@ let Session = {
 			}
 		}
 
-		var right = infra.seq.right(name);
+		var right = Seq.right(name);
 		if (right.length > 1 && value === null || typeof (value) == 'undefined') { //Удаление свойства	
 			var last = right.pop();
 			var val = infra.session.get(right);
