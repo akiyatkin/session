@@ -2,6 +2,7 @@ import { Config } from '/vendor/infrajs/config/Config.js'
 import { View } from '/vendor/infrajs/view/View.js'
 import { Seq } from '/vendor/infrajs/sequence/Seq.js'
 import { Path } from '/vendor/infrajs/path/Path.js'
+import { Each } from '/vendor/infrajs/each/Each.js'
 /*	
 	var ses=infra.Session.init('base',view);
 
