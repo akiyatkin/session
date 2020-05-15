@@ -3,6 +3,7 @@ import { View } from '/vendor/infrajs/view/View.js'
 import { Seq } from '/vendor/infrajs/sequence/Seq.js'
 import { Path } from '/vendor/infrajs/path/Path.js'
 import { Each } from '/vendor/infrajs/each/Each.js'
+import { Event } from '/vendor/infrajs/event/Event.js'
 /*	
 	var ses=infra.Session.init('base',view);
 
