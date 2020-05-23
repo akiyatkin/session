@@ -291,7 +291,9 @@ let Session = {
 		Session.sync(null, true);
 		//Не срабатывает если id нет
 	},
-	async: () => {
+	async: async () => {
+		let { CDN } = await import('/vendor/akiyatkin/load/CDN.js')
+		await CDN.on('load','jquery')
 		return new Promise(resolve => Session.sync(null, null, resolve))
 	},
 	sync: function (list, sync, callback) { //false,false,callback
