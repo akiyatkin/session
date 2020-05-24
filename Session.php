@@ -253,7 +253,7 @@ class Session
 	public static function getUser($email = null, $re = false)
 	{
 		if (!$email) $email = Session::getId();
-		$name = __FILE__.'getUser';
+		//$name = __FILE__.'getUser';
 		//return Once::exec($name, function ($email) {
 			$db = &Db::pdo();
 			if (!$db) return;
