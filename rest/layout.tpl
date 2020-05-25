@@ -1,11 +1,11 @@
 {root:}
 	<h1>Session REST-Сервис</h1>
 
-	<p> 
-		<a href="/{root}/users">users</a>
-		<a href="/{root}/clear">clear/{email}</a>
-		<a href="/{root}/stat">stat</a>
-	</p>
+	<ul> 
+		<li><a href="/{root}/users">users</a></li>
+		<li><a href="/{root}/clear">clear/{email}</a></li>
+		<li><a href="/{root}/stat">stat</a></li>
+	</ul>
 {users:}
 	<h1>Все зарегистрированные пользователи</h1>
 	<table class="table table-striped">
