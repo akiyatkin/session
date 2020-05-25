@@ -3,6 +3,8 @@
 
 	<p> 
 		<a href="/{root}/users">users</a>
+		<a href="/{root}/clear">clear/{email}</a>
+		<a href="/{root}/stat">stat</a>
 	</p>
 {users:}
 	<h1>Все зарегистрированные пользователи</h1>
