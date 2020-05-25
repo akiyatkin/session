@@ -7,7 +7,7 @@ use infrajs\rest\Rest;
 use infrajs\ans\Ans;
 
 
-
+Access::debug(true);
 
 
 
@@ -39,18 +39,28 @@ WHERE table_schema = "'.Db::$conf['database'].'"';
 	//ses_records
 	//ses_sessions
 	
-}, 'clear', function () {
-	//Удалить все записи у пользователей без email старее 1 месяца.
-	$db = Db::pdo();
-	$sql = 'DELETE r,s FROM ses_records r
-RIGHT JOIN ses_sessions s ON s.session_id = r.session_id
-WHERE s.email is null';
-	$req = $db->prepare($sql);
-	$req->execute();
-	echo 'Удалено записей и сессий по которым не было указанного email: '.$req->rowCount();
-	
-}, 'users', function () {
-	Access::admin(true);
+}, 'clear', [function () {
+		//Удалить все записи у пользователей без email старее 1 месяца.
+		$db = Db::pdo();
+		$sql = 'DELETE r,s FROM ses_records r
+	RIGHT JOIN ses_sessions s ON s.session_id = r.session_id
+	WHERE s.email is null';
+		$req = $db->prepare($sql);
+		$req->execute();
+		echo 'Удалено записей и сессий по которым не было указанного email: '.$req->rowCount();
+		
+	}, function ($clear, $email) {
+		//Удалить все записи у пользователей без email старее 1 месяца.
+		$db = Db::pdo();
+		$sql = 'DELETE r,s FROM ses_records r
+	RIGHT JOIN ses_sessions s ON s.session_id = r.session_id
+	WHERE s.email = ?';
+		$req = $db->prepare($sql);
+		$req->execute([$email]);
+		$sesemail = Session::getEmail();
+		echo 'Удалён аккаунт c email '.$email.': '.$req->rowCount();
+}], 'users', function () {
+	//Access::admin(true);
 	$db = Db::pdo();
 
 	$sql = 'SELECT email, date, verify, password from ses_sessions where email is not null';
