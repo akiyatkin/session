@@ -223,7 +223,7 @@ let Session = {
 		if (!sync) {
 			(async () => {
 				let { CDN } = await import('/vendor/akiyatkin/load/CDN.js')
-				await CDN.on('load','jquery')
+				await CDN.fire('load','jquery')
 				$.ajax(options);
 			})()
 		} else {
@@ -293,7 +293,7 @@ let Session = {
 	},
 	async: async () => {
 		let { CDN } = await import('/vendor/akiyatkin/load/CDN.js')
-		await CDN.on('load','jquery')
+		await CDN.fire('load','jquery')
 		return new Promise(resolve => Session.sync(null, null, resolve))
 	},
 	sync: function (list, sync, callback) { //false,false,callback

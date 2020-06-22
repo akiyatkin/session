@@ -1,0 +1,36 @@
+<script type="module">
+import { Session } from '/vendor/infrajs/session/Session.js'
+import { CDN } from '/vendor/akiyatkin/load/CDN.js'
+
+let div = document.getElementById('block')
+let log = async () => {
+    await CDN.fire('load','jquery')
+    
+    let data = {}
+    data.id = Session.getId()
+    data.session = Session.get()|| {}
+
+    let json = JSON.stringify(data, null, '\t')
+    div.innerText = json
+}
+window.log = log
+log()
+
+window.userlogout = async () => {
+    let json = await fetch('/-user/get.php?type=logout&submit=1').then(req => req.json())
+    console.log(json)
+    log()
+
+}
+
+
+</script>
+<button onclick="log()">log</button>
+<button onclick="Session.set('test',1); log()">set test=1</button>
+<button onclick="Session.set('test',2); log()">set test=2</button>
+<button onclick="Session.set('foo',1); log()">set foo=1</button>
+<button onclick="Session.set('foo',2); log()">set foo=2</button>
+<hr>
+<button onclick="Session.logout(); log()">Клиентский Session.logout()</button>
+<button onclick="userlogout();">Серверный -user/get.php?type=logout</button>
+<pre id = "block"></pre>

@@ -292,7 +292,7 @@ class Session
 	public static function logout()
 	{
 		$email = Session::getEmail();
-		if (!$email) return;
+		//if (!$email) return;
 		View::setCookie(Session::getName('pass'));
 		View::setCookie(Session::getName('id')); //id Должен остаться чтобч клиент обратился к серверу
 		View::setCookie(Session::getName('time'));
