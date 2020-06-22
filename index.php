@@ -11,7 +11,7 @@ if (!is_file('vendor/autoload.php')) {
 	require_once('vendor/autoload.php');
 }
 
-Access::admin(true);
+Access::debug(true);
 $ans = array();
 
 if (isset($_GET['get'])) {
