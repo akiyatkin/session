@@ -213,7 +213,7 @@ class Session
 			$session_id = Session::getId();
 		}
 		$user = Session::getUser($session_id);
-
+		if (!$user) return false;
 		return $user['email'];
 	}
 	public static function setEmail($email)
@@ -235,12 +235,13 @@ class Session
 	public static function getVerify($email = null)
 	{
 		$user = Session::getUser($email);
-
+		if (!$user) return false;
 		return (bool) $user['verify'];
 	}
 	public static function setVerify($email = null, $val = 1)
 	{
 		$user = Session::getUser($email);
+		if (!$user) return false;
 		$session_id = $user['session_id'];
 		$db = &Db::pdo();
 		if (!$db) return;
@@ -345,6 +346,7 @@ class Session
 
 		if (is_null($pass)) {
 			$user = Session::getUser($session_id);
+			if (!$user) return false;
 			$pass = md5($user['password']);
 			//Пароль для новой сессии в куки
 			//$pass = substr($pass, 0, 6);
@@ -359,6 +361,10 @@ class Session
 	public static function &user_init($email)
 	{
 		$user = Session::getUser($email);
+		if (!$user) {
+			$r = false;
+			return $r;
+		}
 		$session_id = $user['session_id'];
 		$nowsession_id = Session::getId();
 		if ($session_id == $nowsession_id) {
