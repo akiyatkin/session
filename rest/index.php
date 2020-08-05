@@ -7,7 +7,7 @@ use infrajs\rest\Rest;
 use infrajs\ans\Ans;
 
 
-Access::debug(true);
+//Access::debug(true);
 
 
 
