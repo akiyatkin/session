@@ -358,6 +358,28 @@ class Session
 		View::setCookie(Session::getName('time'), 1);
 		Session::syncNow();
 	}
+	public static function getById($session_id)
+	{
+		$news = Db::all('SELECT name, value, unix_timestamp(time) as time from ses_records where session_id=:session_id order by time, rec_id',[
+			':session_id'=> $session_id
+		]);
+		if (!$news) $news = array();
+
+		$obj = array();
+		Each::forr($news, function &(&$v) use (&$obj) {
+			$r = null;
+			if ($v['value'] == 'null') {
+				$value = null;
+			} else {
+				$value = Load::json_decode($v['value'], true);
+			}
+			$right = Sequence::right($v['name']);
+			$obj = Sequence::set($obj, $right, $value);
+			return $r;
+		});
+
+		return $obj;
+	}
 	public static function &user_init($email)
 	{
 		$user = Session::getUser($email);
